@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.8" tiledversion="1.8.5" orientation="orthogonal" renderorder="left-up" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+ <tileset firstgid="1" source="../../../../../../../Desktop/Overworld.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="240" height="13">
+  <data encoding="base64" compression="zlib">
+   eJzt1r0NwkAMBlDzsw+LAFkw0wESRZbgSueKpIqMTq94cmGdZBeffEtELAAAAAAAAHCQV/NOPn8wE3CsU3NOqueB0V27uqXPZ3ZrzW+rj6R6Nxjd1NUt91jnc0/1bjCC/m5eUk9+odbev3aOda6e6a38Qq0fW2v5wg==
+  </data>
+ </layer>
+</map>
