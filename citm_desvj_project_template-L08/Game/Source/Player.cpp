@@ -79,7 +79,8 @@ bool Player::Start() {
 	currentAnimation = &idleAnimation;
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
-	pbody = app->physics->CreateCircle(position.x, position.y, 10, bodyType::DYNAMIC);
+	/*pbody = app->physics->CreateRectangle(position.x, position.y, 18,28, bodyType::DYNAMIC);*/
+	pbody = app->physics->CreateCircle(position.x, position.y,13, bodyType::DYNAMIC);
 	return true;
 }
 
@@ -89,7 +90,10 @@ bool Player::Update()
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
 	int speed = 3; 
+	float flo = 10;
+	float dump = 13;
 	float impulse = pbody->body->GetMass() * 10;
+	pbody->body->SetAngularDamping(dump);
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
@@ -106,6 +110,7 @@ bool Player::Update()
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		vel = b2Vec2(-speed, -GRAVITY_Y);
+		pbody->body->SetAngularVelocity(-flo);
 		/*pbody->body->SetLinearVelocity(vel);*/
 		currentAnimation = &leftAnimation;
 	}
@@ -113,7 +118,6 @@ bool Player::Update()
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		vel = b2Vec2(speed, -GRAVITY_Y);
 		/*pbody->body->SetLinearVelocity(vel);*/
-		float flo = 10;
 		pbody->body->SetAngularVelocity(flo);
 		currentAnimation = &rightAnimation;
 	}
@@ -163,8 +167,8 @@ bool Player::Update()
 	//pbody->body->SetAngularVelocity(flo);
 
 	//Update player position in pixels
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 5;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 5;
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
 
 	currentAnimation->Update();
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
