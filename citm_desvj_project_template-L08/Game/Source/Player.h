@@ -33,6 +33,7 @@ private:
 	const char* texturePath;
 	Animation* currentAnimation;
 	Animation idleAnimation;
+	Animation leftidleAnimation;
 	Animation rightAnimation;
 	Animation leftAnimation;
 	Animation jumpAnimation;

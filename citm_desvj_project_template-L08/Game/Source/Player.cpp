@@ -45,13 +45,19 @@ Player::Player() : Entity(EntityType::PLAYER)
 	punchAnimation.PushBack({ 126,516,20,26 });
 	punchAnimation.speed = 0.05f;
 
-	//Punch left aniamtion
+	//Punch left animation
 	punchleftAnimation.PushBack({ 396,572,26,26 });
 	punchleftAnimation.PushBack({ 364,572,26,26 });
 	punchleftAnimation.PushBack({ 334,572,24,26 });
 	punchleftAnimation.PushBack({ 306,572,20,26 });
 	punchleftAnimation.speed = 0.05f;
 
+	//Left Idle animation
+	leftidleAnimation.PushBack({ 183,194,20,26 });
+	leftidleAnimation.PushBack({ 151,192,20,28 });
+	leftidleAnimation.PushBack({ 119,194,20,26 });
+	leftidleAnimation.PushBack({ 87,194,20,26 });
+	leftidleAnimation.speed = 0.03f;
 }
 
 Player::~Player() {
@@ -155,7 +161,7 @@ bool Player::Update()
 		currentAnimation = &idleAnimation;
 	}
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
-		currentAnimation = &idleAnimation;
+		currentAnimation = &leftidleAnimation;
 	}
 	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_UP) {
 		currentAnimation = &idleAnimation;
