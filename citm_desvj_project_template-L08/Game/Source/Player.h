@@ -36,6 +36,9 @@ private:
 	Animation rightAnimation;
 	Animation leftAnimation;
 	Animation jumpAnimation;
+	Animation jumpleftAnimation;
+	Animation punchAnimation;
+	Animation punchleftAnimation;
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
