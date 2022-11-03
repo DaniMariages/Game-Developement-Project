@@ -155,8 +155,8 @@ bool Player::Update()
 	pbody->body->SetLinearVelocity(vel);
 
 	//Update player position in pixels
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 5;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 5;
 
 	currentAnimation->Update();
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
