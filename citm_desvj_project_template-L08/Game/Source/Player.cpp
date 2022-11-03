@@ -14,44 +14,42 @@ Player::Player() : Entity(EntityType::PLAYER)
 	name.Create("Player");
 
 	//Right animation
-	rightAnimation.PushBack({ 19, 146, 11, 15 });
-	rightAnimation.PushBack({ 34, 145, 13, 15 });
-	rightAnimation.PushBack({ 51, 146, 11, 14 });
+	rightAnimation.PushBack({ 32, 292, 18, 26 });
+	rightAnimation.PushBack({ 62, 290, 22, 26 });
+	rightAnimation.PushBack({ 96, 292, 18, 26 });
 	rightAnimation.speed = 0.05f;
 
 	//Idle animation
-	idleAnimation.PushBack({ 19,115,10,13 });
-	idleAnimation.PushBack({ 35,114,10,14 });
-	idleAnimation.PushBack({ 51,115,10,13 });
-	idleAnimation.PushBack({ 67,115,10,13 });
+	idleAnimation.PushBack({ 30,228,20,26 });
+	idleAnimation.PushBack({ 62,226,20,28 });
+	idleAnimation.PushBack({ 94,228,20,26 });
+	idleAnimation.PushBack({ 126,228,20,26 });
 	idleAnimation.speed = 0.03f;
 
 	//left animation
-	leftAnimation.PushBack({ 52,166,9,13 });
-	leftAnimation.PushBack({ 35,165,11,13 });
-	leftAnimation.PushBack({ 20,166,9,13 });
+	leftAnimation.PushBack({ 96,330,18,26 });
+	leftAnimation.PushBack({ 62,328,22,26 });
+	leftAnimation.PushBack({ 32,330,18,26 });
 	leftAnimation.speed = 0.05f;
 
 	//Jump animation
-	jumpAnimation.PushBack({ 17, 194, 14, 13 });
+	jumpAnimation.PushBack({ 26, 386, 28, 26 });
 
 	//Jump animation left
-	jumpleftAnimation.PushBack({ 64, 194, 14, 13 });
+	jumpleftAnimation.PushBack({ 120, 386, 28, 26 });
 
 	//Punch animation
-	punchAnimation.PushBack({ 19,259,13,13});
-	punchAnimation.PushBack({ 35,259,13,13 });
-	punchAnimation.PushBack({ 83,259,13,13 });
-	punchAnimation.PushBack({ 51,259,12,13 });
-	punchAnimation.PushBack({ 67,259,10,13 });
+	punchAnimation.PushBack({ 30,516,26,26});
+	punchAnimation.PushBack({ 62,516,26,26 });
+	punchAnimation.PushBack({ 94,516,24,26 });
+	punchAnimation.PushBack({ 126,516,20,26 });
 	punchAnimation.speed = 0.05f;
 
 	//Punch left aniamtion
-	punchleftAnimation.PushBack({ 202,287,13,13 });
-	punchleftAnimation.PushBack({ 186,287,13,13 });
-	punchleftAnimation.PushBack({ 138,287,13,13 });
-	punchleftAnimation.PushBack({ 171,287,12,13 });
-	punchleftAnimation.PushBack({ 157,287,10,13 });
+	punchleftAnimation.PushBack({ 396,572,26,26 });
+	punchleftAnimation.PushBack({ 364,572,26,26 });
+	punchleftAnimation.PushBack({ 334,572,24,26 });
+	punchleftAnimation.PushBack({ 306,572,20,26 });
 	punchleftAnimation.speed = 0.05f;
 
 }
@@ -97,7 +95,9 @@ bool Player::Update()
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		vel = b2Vec2(0, +GRAVITY_Y);
+		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
+
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
@@ -106,21 +106,27 @@ bool Player::Update()
 
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 		vel = b2Vec2(-speed, -GRAVITY_Y);
+		/*pbody->body->SetLinearVelocity(vel);*/
 		currentAnimation = &leftAnimation;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 		vel = b2Vec2(speed, -GRAVITY_Y);
+		/*pbody->body->SetLinearVelocity(vel);*/
+		float flo = 10;
+		pbody->body->SetAngularVelocity(flo);
 		currentAnimation = &rightAnimation;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		vel = b2Vec2(-speed, speed + GRAVITY_Y);
+		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpleftAnimation;
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 		vel = b2Vec2(speed, speed + GRAVITY_Y);
+		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
 	}
 
@@ -128,7 +134,8 @@ bool Player::Update()
 		currentAnimation = &punchAnimation;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
+		vel = b2Vec2(0, 0);
 		currentAnimation = &punchleftAnimation;
 	}
 
@@ -137,9 +144,9 @@ bool Player::Update()
 	}
 
 	//VOLVER AL IDLE ANIMATION
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_UP) {
-		currentAnimation = &idleAnimation;
-	}
+	//if (app->input->GetKey(SDL_SCANCODE_W) == KEY_UP) {
+	//	currentAnimation = &idleAnimation;
+	//}
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
 		currentAnimation = &idleAnimation;
 	}
@@ -152,7 +159,8 @@ bool Player::Update()
 
 
 	//Set the velocity of the pbody of the player
-	pbody->body->SetLinearVelocity(vel);
+	//float flo = 2;
+	//pbody->body->SetAngularVelocity(flo);
 
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 5;
