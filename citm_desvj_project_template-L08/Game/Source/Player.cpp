@@ -97,14 +97,14 @@ bool Player::Update()
 
 	int speed = 3; 
 	float flo = 10;
-	float dump = 13;
+	float dump = 30;
 	float impulse = pbody->body->GetMass() * 10;
 	pbody->body->SetAngularDamping(dump);
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
-		vel = b2Vec2(0, +GRAVITY_Y);
+		vel = b2Vec2(0, +GRAVITY_Y - 1.f);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
 
@@ -128,14 +128,14 @@ bool Player::Update()
 		currentAnimation = &rightAnimation;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		vel = b2Vec2(-speed, speed + GRAVITY_Y);
+	if (app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+		vel = b2Vec2(-speed, speed + GRAVITY_Y-3.f);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpleftAnimation;
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-		vel = b2Vec2(speed, speed + GRAVITY_Y);
+	if (app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+		vel = b2Vec2(speed, speed + (GRAVITY_Y - 3.f));
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
 	}
