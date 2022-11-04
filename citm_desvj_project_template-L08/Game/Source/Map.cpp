@@ -197,6 +197,7 @@ bool Map::Load()
     //app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
     app->physics->CreateRectangle(256, 704 + 32, 4000, 64, STATIC);
 
+
     if(ret == true)
     {
         // L04: DONE 5: LOG all the data loaded iterate all tilesets and LOG everything
