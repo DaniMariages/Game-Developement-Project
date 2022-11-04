@@ -196,7 +196,13 @@ bool Map::Load()
     //app->physics->CreateRectangle(224 + 128, 543 + 32, 256, 64, STATIC);
     //app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
     app->physics->CreateRectangle(256, 704 + 32, 4000, 64, STATIC);
-
+    app->physics->CreateRectangle(480+32, 672-16, 192, 96, STATIC);
+    app->physics->CreateRectangle(704+64, 544 - 16, 128, 96, STATIC);
+    app->physics->CreateRectangle(800 + 16, 448 - 16, 32, 96, STATIC);
+    app->physics->CreateRectangle(832 + 48, 416, 96, 64, STATIC);
+    app->physics->CreateRectangle(928 + 48, 384 + 16, 96, 32, STATIC);
+    app->physics->CreateRectangle(832 + 240, 544+16, 480, 32, STATIC);
+    app->physics->CreateRectangle(992+16, 416+16, 32, 32, STATIC);
 
     if(ret == true)
     {

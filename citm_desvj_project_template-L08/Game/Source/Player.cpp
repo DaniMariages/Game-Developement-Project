@@ -103,7 +103,7 @@ bool Player::Update()
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
 		vel = b2Vec2(0, +GRAVITY_Y);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
