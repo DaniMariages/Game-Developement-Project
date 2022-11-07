@@ -4,11 +4,9 @@
 	<window />
 	<textures />
 	<audio />
-	<:anonymous />
 	<scene />
 	<entitymanager />
-	<map />
 	<renderer>
-		<camera x="0" y="0" />
+		<camera x="195" y="36" />
 	</renderer>
 </save_state>

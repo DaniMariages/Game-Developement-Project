@@ -8,6 +8,7 @@
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
+#include "Item.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -167,6 +168,8 @@ bool Player::Update()
 		currentAnimation = &idleAnimation;
 	}
 
+	
+
 
 	//Set the velocity of the pbody of the player
 	//float flo = 2;
@@ -180,6 +183,7 @@ bool Player::Update()
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	app->render->DrawTexture(texture, position.x, position.y, &rect);
 
+	
 
 	return true;
 }
