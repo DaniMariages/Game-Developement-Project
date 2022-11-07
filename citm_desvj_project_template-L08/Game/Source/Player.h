@@ -33,6 +33,7 @@ private:
 	//L02: DONE 1: Declare player parameters
 	SDL_Texture* texture;
 	const char* texturePath;
+
 	Animation* currentAnimation;
 	Animation idleAnimation;
 	Animation leftidleAnimation;
@@ -44,7 +45,7 @@ private:
 	Animation punchleftAnimation;
 
 	bool OnAir = false;
-	bool abletoimpulse = false;
+	bool abletoimpulse = true;
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;

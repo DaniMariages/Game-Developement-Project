@@ -135,9 +135,10 @@ bool Player::Update()
 		currentAnimation = &leftAnimation;
 	}
 	//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL AIRE
-	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN && OnAir == true)
+	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN && OnAir == true && abletoimpulse == true)
 	{
 		pbody->body->ApplyLinearImpulse(b2Vec2(-4, 0), pbody->body->GetPosition(), true);
+		abletoimpulse = false;
 	}
 
 
@@ -148,20 +149,21 @@ bool Player::Update()
 		currentAnimation = &rightAnimation;
 	}
 	//MOVIMIENTO A LA DERECHA ESTANDO EN EL AIRE
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN && OnAir == true)
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN && OnAir == true && abletoimpulse == true)
 	{
 		pbody->body->ApplyLinearImpulse(b2Vec2(4, 0), pbody->body->GetPosition(), true);
+		abletoimpulse = false;
 	}
 
 
 	//SALTO DIAGONAL HACIA LA IZQUIERDA
-	if (app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && OnAir == true) {
+	if ((app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)) {
 		vel = b2Vec2(-4, GRAVITY_Y);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpleftAnimation;
 	}
 	//SALTO DIAGONAL HACIA LA DERECHA
-	if (app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && OnAir == true) {
+	if ((app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)) {
 		vel = b2Vec2(4, GRAVITY_Y);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
@@ -207,7 +209,6 @@ bool Player::Update()
 		currentAnimation = &leftidleAnimation;
 	}
 	
-
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
@@ -232,12 +233,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	{
 	case ColliderType::ITEM:
 		LOG("Collision ITEM");
+
 		app->audio->PlayFx(pickCoinFxId);
+		
 		break;
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 
 		OnAir = false;
+		abletoimpulse = true;
 
 		break;
 	case ColliderType::UNKNOWN:
