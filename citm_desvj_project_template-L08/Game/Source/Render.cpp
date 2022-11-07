@@ -246,7 +246,6 @@ bool Render::SaveState(pugi::xml_node& data)
 {
 	pugi::xml_node cam = data.append_child("camera");
 
-
 	cam.append_attribute("x") = camera.x;
 	cam.append_attribute("y") = camera.y;
 

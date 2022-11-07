@@ -24,6 +24,8 @@ public:
 
 	bool CleanUp();
 
+	void OnCollision(PhysBody* physA, PhysBody* physB);
+
 public:
 
 private:
@@ -41,9 +43,13 @@ private:
 	Animation punchAnimation;
 	Animation punchleftAnimation;
 
+	bool OnAir = false;
+	bool abletoimpulse = false;
+
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
 
+	int pickCoinFxId;
 };
 
 #endif // __PLAYER_H__

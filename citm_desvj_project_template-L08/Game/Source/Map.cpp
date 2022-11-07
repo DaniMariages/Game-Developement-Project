@@ -195,25 +195,25 @@ bool Map::Load()
     // Later you can create a function here to load and create the colliders from the map
     //app->physics->CreateRectangle(224 + 128, 543 + 32, 256, 64, STATIC);
     //app->physics->CreateRectangle(352 + 64, 384 + 32, 128, 64, STATIC);
-    app->physics->CreateRectangle(256, 704 + 32, 5512 + 118, 64, STATIC);
-    app->physics->CreateRectangle(480+32, 672-16, 192, 96, STATIC);
-    app->physics->CreateRectangle(704+64, 544 - 16, 128, 96, STATIC);
-    app->physics->CreateRectangle(800 + 16, 448 - 16, 32, 96, STATIC);
-    app->physics->CreateRectangle(832 + 48, 416, 96, 64, STATIC);
-    app->physics->CreateRectangle(928 + 48, 384 + 16, 96, 32, STATIC);
-    app->physics->CreateRectangle(832 + 240, 544+16, 480, 32, STATIC);
-    app->physics->CreateRectangle(992+16, 416+16, 32, 32, STATIC);
-    app->physics->CreateRectangle(1120 + 128, 416, 256, 64, STATIC);
-    app->physics->CreateRectangle(1312 + 144, 672 - 48, 288, 160, STATIC);
-    app->physics->CreateRectangle(1344 + 16 , 512 - 16, 32, 96, STATIC);
-    app->physics->CreateRectangle(1600 + 128, 704 - 48, 256, 96, STATIC);
-    app->physics->CreateRectangle(2304 + 144, 672 + 16, 288, 32, STATIC);
-    app->physics->CreateRectangle(2688 + 16, 672 + 16, 32, 32, STATIC);
-    app->physics->CreateRectangle(2944 + 64, 672 - 16, 128, 96, STATIC);
-    app->physics->CreateRectangle(2912 - 64 , 672 + 16, 64, 32, STATIC);
-    app->physics->CreateRectangle(2880 + 32, 672, 64, 64, STATIC);
-    app->physics->CreateRectangle(3232 + 64, 544 + 16, 96+32, 32, STATIC);
-    app->physics->CreateRectangle(3552 + 144, 704 + 32, 288, 64, STATIC);
+    PhysBody* c1 = app->physics->CreateRectangle(256, 704 + 32, 5512 + 118, 64, STATIC);    c1->ctype = ColliderType::PLATFORM;
+    PhysBody* c2 = app->physics->CreateRectangle(480 + 32, 672 - 16, 192, 96, STATIC);      c2->ctype = ColliderType::PLATFORM;
+    PhysBody* c3 = app->physics->CreateRectangle(704+64, 544 - 16, 128, 96, STATIC);        c3->ctype = ColliderType::PLATFORM;
+    PhysBody* c4 = app->physics->CreateRectangle(800 + 16, 448 - 16, 32, 96, STATIC);       c4->ctype = ColliderType::PLATFORM;
+    PhysBody* c5 = app->physics->CreateRectangle(832 + 48, 416, 96, 64, STATIC);            c5->ctype = ColliderType::PLATFORM;
+    PhysBody* c6 = app->physics->CreateRectangle(928 + 48, 384 + 16, 96, 32, STATIC);       c6->ctype = ColliderType::PLATFORM;
+    PhysBody* c7 = app->physics->CreateRectangle(832 + 240, 544+16, 480, 32, STATIC);       c7->ctype = ColliderType::PLATFORM;
+    PhysBody* c8 = app->physics->CreateRectangle(992+16, 416+16, 32, 32, STATIC);           c8->ctype = ColliderType::PLATFORM;
+    PhysBody* c9 = app->physics->CreateRectangle(1120 + 128, 416, 256, 64, STATIC);         c9->ctype = ColliderType::PLATFORM;
+    PhysBody* c10 = app->physics->CreateRectangle(1312 + 144, 672 - 48, 288, 160, STATIC);  c10->ctype = ColliderType::PLATFORM;
+    PhysBody* c11 = app->physics->CreateRectangle(1344 + 16, 512 - 16, 32, 96, STATIC);     c11->ctype = ColliderType::PLATFORM;
+    PhysBody* c12 = app->physics->CreateRectangle(1600 + 128, 704 - 48, 256, 96, STATIC);   c12->ctype = ColliderType::PLATFORM;
+    PhysBody* c13 = app->physics->CreateRectangle(2304 + 144, 672 + 16, 288, 32, STATIC);   c13->ctype = ColliderType::PLATFORM;
+    PhysBody* c14 = app->physics->CreateRectangle(2688 + 16, 672 + 16, 32, 32, STATIC);     c14->ctype = ColliderType::PLATFORM;
+    PhysBody* c15 = app->physics->CreateRectangle(2944 + 64, 672 - 16, 128, 96, STATIC);    c15->ctype = ColliderType::PLATFORM;
+    PhysBody* c16 = app->physics->CreateRectangle(2912 - 64 , 672 + 16, 64, 32, STATIC);    c16->ctype = ColliderType::PLATFORM;
+    PhysBody* c17 = app->physics->CreateRectangle(2880 + 32, 672, 64, 64, STATIC);          c17->ctype = ColliderType::PLATFORM;
+    PhysBody* c18 = app->physics->CreateRectangle(3232 + 64, 544 + 16, 96+32, 32, STATIC);  c18->ctype = ColliderType::PLATFORM;
+    PhysBody* c19 = app->physics->CreateRectangle(3552 + 144, 704 + 32, 288, 64, STATIC);   c19->ctype = ColliderType::PLATFORM;
 
     if(ret == true)
     {

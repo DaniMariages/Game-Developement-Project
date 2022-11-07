@@ -83,11 +83,21 @@ bool Player::Start() {
 
 	//initilize textures
 	texture = app->tex->Load(texturePath);
-	currentAnimation = &idleAnimation;
 
 	// L07 DONE 5: Add physics to the player - initialize physics body
-	/*pbody = app->physics->CreateRectangle(position.x, position.y, 18,28, bodyType::DYNAMIC);*/
-	pbody = app->physics->CreateCircle(position.x, position.y,13, bodyType::DYNAMIC);
+	pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 16, bodyType::DYNAMIC);
+
+	// L07 DONE 6: Assign player class (using "this") to the listener of the pbody. This makes the Physics module to call the OnCollision method
+	pbody->listener = this;
+
+	// L07 DONE 7: Assign collider type
+	pbody->ctype = ColliderType::PLAYER;
+
+	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
+	pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
+
+	currentAnimation = &idleAnimation;
+
 	return true;
 }
 
@@ -96,51 +106,68 @@ bool Player::Update()
 
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-	int speed = 3; 
+	int speed = 8; 
 	float flo = 10;
 	float dump = 30;
 	float impulse = pbody->body->GetMass() * 10;
 	pbody->body->SetAngularDamping(dump);
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
+	b2Vec2 velcero = b2Vec2(0, 0);
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
-		vel = b2Vec2(0, +GRAVITY_Y - 1.f);
-		pbody->body->SetLinearVelocity(vel);
+	
+	//SALTO
+	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && OnAir == false) {
+
+		b2Vec2 jump = b2Vec2(0, 0);
+		pbody->body->SetLinearVelocity(jump);
+		OnAir = true;
+
+		pbody->body->ApplyLinearImpulse(b2Vec2(0, -speed), pbody->body->GetPosition(), true);
 		currentAnimation = &jumpAnimation;
 
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-		//
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+	//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL SUELO
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && OnAir == false) {
 		vel = b2Vec2(-speed, -GRAVITY_Y);
-		pbody->body->SetAngularVelocity(-flo);
-		/*pbody->body->SetLinearVelocity(vel);*/
+		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &leftAnimation;
 	}
-
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-		vel = b2Vec2(speed, -GRAVITY_Y);
-		/*pbody->body->SetLinearVelocity(vel);*/
-		pbody->body->SetAngularVelocity(flo);
-		currentAnimation = &rightAnimation;
+	//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL AIRE
+	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN && OnAir == true)
+	{
+		pbody->body->ApplyLinearImpulse(b2Vec2(-4, 0), pbody->body->GetPosition(), true);
 	}
 
-	if (app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
-		vel = b2Vec2(-speed, speed + GRAVITY_Y-3.f);
+
+	//MOVIMIENTO A LA DERECHA ESTANDO EN EL SUELO
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && OnAir == false) {
+		vel = b2Vec2(speed, -GRAVITY_Y);
+		pbody->body->SetLinearVelocity(vel);
+		currentAnimation = &rightAnimation;
+	}
+	//MOVIMIENTO A LA DERECHA ESTANDO EN EL AIRE
+	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN && OnAir == true)
+	{
+		pbody->body->ApplyLinearImpulse(b2Vec2(4, 0), pbody->body->GetPosition(), true);
+	}
+
+
+	//SALTO DIAGONAL HACIA LA IZQUIERDA
+	if (app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && OnAir == true) {
+		vel = b2Vec2(-4, GRAVITY_Y);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpleftAnimation;
 	}
-
-	if (app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
-		vel = b2Vec2(speed, speed + (GRAVITY_Y - 3.f));
+	//SALTO DIAGONAL HACIA LA DERECHA
+	if (app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && OnAir == true) {
+		vel = b2Vec2(4, GRAVITY_Y);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
 	}
 
+	//MOVIMIENTO Y GOLPE
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
 		currentAnimation = &punchAnimation;
 	}
@@ -154,26 +181,32 @@ bool Player::Update()
 		currentAnimation = &punchAnimation;
 	}
 
-	//VOLVER AL IDLE ANIMATION
-	//if (app->input->GetKey(SDL_SCANCODE_W) == KEY_UP) {
-	//	currentAnimation = &idleAnimation;
-	//}
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP) {
+	//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL AIRE
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP && OnAir == true) {
+		
+		pbody->body->SetLinearVelocity(pbody->body->GetLinearVelocity());
 		currentAnimation = &idleAnimation;
 	}
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP) {
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP && OnAir == true) {
+		pbody->body->SetLinearVelocity(pbody->body->GetLinearVelocity());
 		currentAnimation = &leftidleAnimation;
 	}
+
+	//VOLVER A LA ANIMACION NORMAL CUANDO ACABAS DE PEGAR
 	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_UP) {
 		currentAnimation = &idleAnimation;
 	}
 
+	//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL SUELO
+	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP && OnAir == false) {
+		pbody->body->SetLinearVelocity(velcero);
+		currentAnimation = &idleAnimation;
+	}
+	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP && OnAir == false) {
+		pbody->body->SetLinearVelocity(velcero);
+		currentAnimation = &leftidleAnimation;
+	}
 	
-
-
-	//Set the velocity of the pbody of the player
-	//float flo = 2;
-	//pbody->body->SetAngularVelocity(flo);
 
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
@@ -183,13 +216,35 @@ bool Player::Update()
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	app->render->DrawTexture(texture, position.x, position.y, &rect);
 
-	
-
 	return true;
 }
 
 bool Player::CleanUp()
 {
-
 	return true;
+}
+
+void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
+
+	// L07 DONE 7: Detect the type of collision
+
+	switch (physB->ctype)
+	{
+	case ColliderType::ITEM:
+		LOG("Collision ITEM");
+		app->audio->PlayFx(pickCoinFxId);
+		break;
+	case ColliderType::PLATFORM:
+		LOG("Collision PLATFORM");
+
+		OnAir = false;
+
+		break;
+	case ColliderType::UNKNOWN:
+		LOG("Collision UNKNOWN");
+		break;
+	}
+
+
+
 }
