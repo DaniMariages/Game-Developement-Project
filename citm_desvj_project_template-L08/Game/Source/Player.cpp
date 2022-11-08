@@ -106,10 +106,11 @@ bool Player::Update()
 
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 
-	int speed = 8; 
-	float flo = 10;
-	float dump = 30;
-	float impulse = pbody->body->GetMass() * 10;
+	int jump = 15; 
+	int speed = 10;
+	int jumponmovement = 20;
+	float dump = 300;
+	
 	pbody->body->SetAngularDamping(dump);
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
 	b2Vec2 velcero = b2Vec2(0, 0);
@@ -119,18 +120,17 @@ bool Player::Update()
 	//SALTO
 	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && OnAir == false) {
 
-		b2Vec2 jump = b2Vec2(0, 0);
-		pbody->body->SetLinearVelocity(jump);
+		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		OnAir = true;
 
-		pbody->body->ApplyLinearImpulse(b2Vec2(0, -speed), pbody->body->GetPosition(), true);
+		pbody->body->ApplyLinearImpulse(b2Vec2(0, -jump), pbody->body->GetPosition(), true);
 		currentAnimation = &jumpAnimation;
 
 	}
 
 	//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL SUELO
 	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && OnAir == false) {
-		vel = b2Vec2(-speed, -GRAVITY_Y);
+		vel = b2Vec2(-speed, jump);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &leftAnimation;
 	}
@@ -144,7 +144,7 @@ bool Player::Update()
 
 	//MOVIMIENTO A LA DERECHA ESTANDO EN EL SUELO
 	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && OnAir == false) {
-		vel = b2Vec2(speed, -GRAVITY_Y);
+		vel = b2Vec2(speed, jump);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &rightAnimation;
 	}
@@ -158,13 +158,13 @@ bool Player::Update()
 
 	//SALTO DIAGONAL HACIA LA IZQUIERDA
 	if ((app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)) {
-		vel = b2Vec2(-4, GRAVITY_Y);
+		vel = b2Vec2(-6, -jumponmovement);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpleftAnimation;
 	}
 	//SALTO DIAGONAL HACIA LA DERECHA
 	if ((app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)) {
-		vel = b2Vec2(4, GRAVITY_Y);
+		vel = b2Vec2(6, -jumponmovement);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
 	}
@@ -240,8 +240,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLATFORM:
 		LOG("Collision PLATFORM");
 
+	
 		OnAir = false;
 		abletoimpulse = true;
+		
+		
 
 		break;
 	case ColliderType::UNKNOWN:

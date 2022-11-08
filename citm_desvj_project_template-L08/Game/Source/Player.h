@@ -28,7 +28,7 @@ public:
 
 public:
 
-private:
+public:
 
 	//L02: DONE 1: Declare player parameters
 	SDL_Texture* texture;

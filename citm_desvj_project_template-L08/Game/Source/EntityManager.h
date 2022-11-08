@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Entity.h"
 #include "List.h"
+#include "Physics.h"
+
 
 class EntityManager : public Module
 {
@@ -32,6 +34,10 @@ public:
 	void DestroyEntity(Entity* entity);
 
 	void AddEntity(Entity* entity);
+
+	bool LoadState(pugi::xml_node&);
+
+	bool SaveState(pugi::xml_node&);
 
 public:
 
