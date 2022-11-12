@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Map.h"
+#include "Player.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -92,6 +93,16 @@ bool Scene::Update(float dt)
 		app->render->camera.x -= 1;
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
+
+	//Camara siguiendo a jugador
+	int posicion = player->position.x;
+	int limiteIzq = app->map->mapData.width + 330; 
+	int limiteDer = app->map->mapData.width + 3149; 
+
+	if (limiteIzq <= posicion && posicion <= limiteDer) app->render->camera.x = -posicion + 450;
+
+	
+
 
 	// Draw map
 	app->map->Draw();

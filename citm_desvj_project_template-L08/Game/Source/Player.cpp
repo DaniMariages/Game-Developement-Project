@@ -208,7 +208,7 @@ bool Player::Update()
 		pbody->body->SetLinearVelocity(velcero);
 		currentAnimation = &leftidleAnimation;
 	}
-	
+
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
