@@ -52,6 +52,7 @@ public:
 	bool abletoimpulse = true;
 	bool spawn = false;
 	bool win = false;
+	bool godmode = false;
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;

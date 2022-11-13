@@ -9,6 +9,7 @@
 #include "Render.h"
 #include "Player.h"
 #include "Window.h"
+#include "Scene.h"
 #include "Box2D/Box2D/Box2D.h"
 
 #ifdef _DEBUG
@@ -33,6 +34,11 @@ Physics::~Physics()
 bool Physics::Start()
 {
 	LOG("Creating Physics 2D environment");
+
+	if (app->scene->player->godmode == true)
+	{
+		world->SetGravity(b2Vec2(0, 0));
+	}
 
 	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
 	

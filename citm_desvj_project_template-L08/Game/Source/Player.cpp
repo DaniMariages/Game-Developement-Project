@@ -19,20 +19,20 @@ Player::Player() : Entity(EntityType::PLAYER)
 	rightAnimation.PushBack({ 32, 292, 18, 26 });
 	rightAnimation.PushBack({ 62, 290, 22, 26 });
 	rightAnimation.PushBack({ 96, 292, 18, 26 });
-	rightAnimation.speed = 0.05f;
+	rightAnimation.speed = 0.12f;
 
 	//Idle animation
 	idleAnimation.PushBack({ 30,228,20,26 });
 	idleAnimation.PushBack({ 62,226,20,28 });
 	idleAnimation.PushBack({ 94,228,20,26 });
 	idleAnimation.PushBack({ 126,228,20,26 });
-	idleAnimation.speed = 0.03f;
+	idleAnimation.speed = 0.05f;
 
 	//left animation
 	leftAnimation.PushBack({ 96,330,18,26 });
 	leftAnimation.PushBack({ 62,328,22,26 });
 	leftAnimation.PushBack({ 32,330,18,26 });
-	leftAnimation.speed = 0.05f;
+	leftAnimation.speed = 0.12f;
 
 	//Jump animation
 	jumpAnimation.PushBack({ 26, 386, 28, 26 });
@@ -230,6 +230,35 @@ bool Player::Update()
 		currentAnimation = &leftidleAnimation;
 	}
 
+	//GodMode
+	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) 
+	{
+		if (godmode == false) godmode = true;
+		else godmode = false;
+	}
+	
+
+	if (godmode == true)
+	{
+		
+		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+			vel = b2Vec2(0, -speed);
+		}
+		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+			vel = b2Vec2(0, speed);
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+			vel = b2Vec2(-speed, 0);
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+			vel = b2Vec2(speed, 0);
+		}
+
+		pbody->body->SetLinearVelocity(vel);
+	}
+
 	if (win == true) {
 		pbody->body->SetLinearVelocity(b2Vec2(10, 0));
 	}
@@ -278,7 +307,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::SPIKES:
 		LOG("Collision SPIKES");
 		/*app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);*/
-		spawn = true;
+		if (godmode == false)
+		{
+			spawn = true;
+		}
+		
 		//spawn = false;
 
 		break;
@@ -288,8 +321,13 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	case ColliderType::WIN:
 		LOG("Collision WIN");
-		win = true;
-		currentAnimation = &winAnimation;
+
+		if (godmode == false)
+		{
+			win = true;
+			currentAnimation = &winAnimation;
+		}
+	
 		break;
 	}
 	
