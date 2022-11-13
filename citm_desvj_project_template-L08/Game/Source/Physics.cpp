@@ -22,7 +22,7 @@ Physics::Physics() : Module()
 {
 	world = NULL;
 	mouse_joint = NULL;
-	debug = false;
+	debug = true;
 
 }
 
@@ -34,11 +34,6 @@ Physics::~Physics()
 bool Physics::Start()
 {
 	LOG("Creating Physics 2D environment");
-
-	if (app->scene->player->godmode == true)
-	{
-		world->SetGravity(b2Vec2(0, 0));
-	}
 
 	world = new b2World(b2Vec2(GRAVITY_X, -GRAVITY_Y));
 	

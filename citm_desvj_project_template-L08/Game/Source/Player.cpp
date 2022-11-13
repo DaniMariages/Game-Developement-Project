@@ -138,7 +138,7 @@ bool Player::Update()
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	
 	//SALTO
-	if (app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && OnAir == false) {
+	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && OnAir == false) {
 
 		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
 		OnAir = true;
@@ -177,13 +177,13 @@ bool Player::Update()
 
 
 	//SALTO DIAGONAL HACIA LA IZQUIERDA
-	if ((app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)) {
+	if ((app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)) {
 		vel = b2Vec2(-6, -jumponmovement);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpleftAnimation;
 	}
 	//SALTO DIAGONAL HACIA LA DERECHA
-	if ((app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)) {
+	if ((app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)) {
 		vel = b2Vec2(6, -jumponmovement);
 		pbody->body->SetLinearVelocity(vel);
 		currentAnimation = &jumpAnimation;
@@ -240,7 +240,7 @@ bool Player::Update()
 
 	if (godmode == true)
 	{
-		
+	
 		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 			vel = b2Vec2(0, -speed);
 		}
