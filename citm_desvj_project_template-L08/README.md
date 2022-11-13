@@ -1,26 +1,29 @@
-# {Project Name}
+# Jumping Man
 
 ## Description
 
-{project description}
+Juego de plataformas inspirado en super mario.
 
 ## Key Features
 
- - {Feature01}
- - {Feature02}
- - {Feature03}
- - {Feature04}
+ - F5: Guardar
+ - F6: Cragar
+ - F10: God mode
+ - UP: Mover camara hacia arriba
+ - DOWN: Mover camara hacia abajo
+ - LEFT: Mover camara hacia la izquierda
+ - RIGHT: Mover camara hacia la derecha
  
 ## Controls
 
- - {ControlsScheme}
+ - A: Moverse hacia la derecha
+ - D: Moverse hacia la izquierda
+ -SPACE: Saltar
 
 ## Developers
 
- - {Dev01} - {Role(s)}
- - {Dev02} - {Role(s)}
- - {Dev03} - {Role(s)}
- - {Dev04} - {Role(s)}
+ - Toni Romanos
+ - Dani Mariages
 
 ## License
 
