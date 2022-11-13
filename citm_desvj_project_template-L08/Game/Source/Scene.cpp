@@ -94,11 +94,12 @@ bool Scene::Update(float dt)
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 
-	//Camara siguiendo a jugador
+	//Limites de la camara
 	int posicion = player->position.x;
 	int limiteIzq = app->map->mapData.width + 330; 
 	int limiteDer = app->map->mapData.width + 3149; 
-
+	
+	//Camara siguiendo al jugador
 	if (limiteIzq <= posicion && posicion <= limiteDer) app->render->camera.x = -posicion + 450;
 
 	

@@ -66,6 +66,35 @@ struct Properties
 	List<Property*> list;
 };
 
+struct Data
+{
+	struct Tile
+	{
+		SString name;
+		int gid;
+	};
+
+	~Data()
+	{
+		//...
+		ListItem<Tile*>* item;
+		item = list.start;
+
+		while (item != NULL)
+		{
+			RELEASE(item->data);
+			item = item->next;
+		}
+
+		list.Clear();
+	}
+
+	// L06: DONE 7: Method to ask for the value of a custom property
+	Tile* GetTile(const char* name);
+
+	List<Tile*> list;
+};
+
 // L05: DONE 1: Create a struct for the map layer
 struct MapLayer
 {
@@ -77,6 +106,7 @@ struct MapLayer
 
 	// L06: DONE: Store custom properties
 	Properties properties;
+	Data DATA;
 
 	MapLayer() : data(NULL)
 	{}
@@ -148,6 +178,8 @@ private:
 	// L06: DONE 6: Load a group of properties 
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
+	bool LoadTile(pugi::xml_node& node, Data& data);
+
 public: 
 
 	// L04: DONE 1: Declare a variable data of the struct MapData
@@ -158,6 +190,7 @@ private:
     SString mapFileName;
 	SString mapFolder;
     bool mapLoaded;
+	bool colision;
 };
 
 #endif // __MAP_H__
