@@ -36,6 +36,7 @@ bool Item::Awake() {
 
 bool Item::Start() {
 
+
 	//initilize textures
 	texture = app->tex->Load(texturePath);
 	
@@ -46,6 +47,7 @@ bool Item::Start() {
 	pbody->ctype = ColliderType::ITEM;
 
 	currentAnimation = &idleAnimation;
+	
 
 	return true;
 }
@@ -53,14 +55,20 @@ bool Item::Start() {
 bool Item::Update()
 {
 	// L07 DONE 4: Add a physics to an item - update the position of the object from the physics.  
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 7;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 7;
+	if (app->scene->player->win == true) 
+	{
+		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 7;
+		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 7;
 
-	//app->render->DrawTexture(texture, position.x, position.y);
+		//app->render->DrawTexture(texture, position.x, position.y);
 
-	currentAnimation->Update();
-	SDL_Rect rect = currentAnimation->GetCurrentFrame();
-	app->render->DrawTexture(texture, position.x, position.y, &rect);
+		currentAnimation->Update();
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+		app->render->DrawTexture(texture, position.x, position.y, &rect);
+
+		
+	}
+	
 
 	return true;
 }

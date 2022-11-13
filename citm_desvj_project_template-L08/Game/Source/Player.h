@@ -34,6 +34,9 @@ public:
 	SDL_Texture* texture;
 	const char* texturePath;
 
+	SDL_Texture* coins;
+	const char* coinsPath;
+
 	Animation* currentAnimation;
 	Animation idleAnimation;
 	Animation leftidleAnimation;
@@ -43,10 +46,12 @@ public:
 	Animation jumpleftAnimation;
 	Animation punchAnimation;
 	Animation punchleftAnimation;
+	Animation winAnimation;
 
 	bool OnAir = false;
 	bool abletoimpulse = true;
 	bool spawn = false;
+	bool win = false;
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
