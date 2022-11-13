@@ -32,6 +32,7 @@ enum class ColliderType {
 	PLATFORM,
 	WALL,
 	SPIKES,
+	WIN,
 	UNKNOWN
 	// ..
 };

@@ -60,6 +60,17 @@ Player::Player() : Entity(EntityType::PLAYER)
 	leftidleAnimation.PushBack({ 119,194,20,26 });
 	leftidleAnimation.PushBack({ 87,194,20,26 });
 	leftidleAnimation.speed = 0.03f;
+
+	//Win animation
+	winAnimation.PushBack({ 124, 34, 26, 29 });
+	winAnimation.PushBack({ 156, 34, 26, 29 });
+	winAnimation.PushBack({ 124, 34, 26, 29 });
+	winAnimation.PushBack({ 156, 34, 26, 29 });
+	winAnimation.PushBack({ 124, 34, 26, 29 });
+	winAnimation.PushBack({ 156, 34, 26, 29 });
+	winAnimation.speed = 0.2f;
+
+
 }
 
 Player::~Player() {
@@ -76,6 +87,7 @@ bool Player::Awake() {
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
+	
 
 	return true;
 }
@@ -108,12 +120,12 @@ bool Player::Update()
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 	if (spawn == true) {
 		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);
-		
 		app->render->camera.x = 0;
-		
-
+		currentAnimation = &idleAnimation;
 		spawn = false;
+		win = false;
 	}
+
 	int jump = 15; 
 	int speed = 10;
 	int jumponmovement = 20;
@@ -218,6 +230,10 @@ bool Player::Update()
 		currentAnimation = &leftidleAnimation;
 	}
 
+	if (win == true) {
+		pbody->body->SetLinearVelocity(b2Vec2(10, 0));
+	}
+
 	//Update player position in pixels
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
@@ -225,6 +241,8 @@ bool Player::Update()
 	currentAnimation->Update();
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	app->render->DrawTexture(texture, position.x, position.y, &rect);
+
+	//app->scene->player->win = false;
 
 	return true;
 }
@@ -267,8 +285,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;
-	}
 
+	case ColliderType::WIN:
+		LOG("Collision WIN");
+		win = true;
+		currentAnimation = &winAnimation;
+		break;
+	}
+	
 
 
 }
