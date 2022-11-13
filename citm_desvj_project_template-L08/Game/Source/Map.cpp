@@ -223,41 +223,26 @@ bool Map::Load()
 
     //PAREDES
     PhysBody* p1 = app->physics->CreateRectangle(0, 384, 10, 768, STATIC);                 p1->ctype = ColliderType::WALL;
-
-    PhysBody* p2 = app->physics->CreateRectangle(416 + 4, 640 + 17, 10, 96, STATIC);                p2->ctype = ColliderType::WALL;
-    PhysBody* p3 = app->physics->CreateRectangle(608 - 4, 640 + 17, 10, 96, STATIC);                p3->ctype = ColliderType::WALL;
-
-    PhysBody* p4 = app->physics->CreateRectangle(704 + 4, 512 + 17, 10, 96, STATIC);                p4->ctype = ColliderType::WALL;
+    PhysBody* p2 = app->physics->CreateRectangle(416 + 4, 640 + 17, 10, 96, STATIC);       p2->ctype = ColliderType::WALL;
+    PhysBody* p3 = app->physics->CreateRectangle(608 - 4, 640 + 17, 10, 96, STATIC);       p3->ctype = ColliderType::WALL;
+    PhysBody* p4 = app->physics->CreateRectangle(704 + 4, 512 + 17, 10, 96, STATIC);       p4->ctype = ColliderType::WALL;
     PhysBody* p5 = app->physics->CreateRectangle(804, 432, 10, 96, STATIC);                p5->ctype = ColliderType::WALL;
-
-    PhysBody* p6 = app->physics->CreateRectangle(1024 - 4, 416, 10, 64, STATIC);                p6->ctype = ColliderType::WALL;
-    PhysBody* p7 = app->physics->CreateRectangle(1120 + 4, 416, 10, 64, STATIC);                p7->ctype = ColliderType::WALL;
-
-    PhysBody* p8 = app->physics->CreateRectangle(1376 - 4, 448 + 17, 10, 160, STATIC);                p8->ctype = ColliderType::WALL;
-
-    PhysBody* p9 = app->physics->CreateRectangle(1600 - 4, 576, 10, 64, STATIC);                p9->ctype = ColliderType::WALL;
-
-    PhysBody* p10 = app->physics->CreateRectangle(1856 - 4, 640 + 17, 10, 96, STATIC);                p10->ctype = ColliderType::WALL;
-
-    PhysBody* p11 = app->physics->CreateRectangle(2304 + 4, 672 + 17, 10, 32, STATIC);                p11->ctype = ColliderType::WALL;
-    PhysBody* p12 = app->physics->CreateRectangle(2592 - 4, 672 + 17, 10, 32, STATIC);                p12->ctype = ColliderType::WALL;
-
-    PhysBody* p13 = app->physics->CreateRectangle(2688 + 4, 672 + 17, 10, 32, STATIC);                p13->ctype = ColliderType::WALL;
-    PhysBody* p14 = app->physics->CreateRectangle(2720 - 4, 672 + 17, 10, 32, STATIC);                p14->ctype = ColliderType::WALL;
-
-    PhysBody* p15 = app->physics->CreateRectangle(2816 + 4, 672 + 17, 10, 32, STATIC);                p15->ctype = ColliderType::WALL;
-
-    PhysBody* p16 = app->physics->CreateRectangle(2880 + 4, 640 + 17, 10, 32, STATIC);                p16->ctype = ColliderType::WALL;
-
-    PhysBody* p17 = app->physics->CreateRectangle(2944 + 4, 608 + 17, 10, 32, STATIC);                p17->ctype = ColliderType::WALL;
-
-    PhysBody* p18 = app->physics->CreateRectangle(3072 - 4, 672 + 17, 10, 160, STATIC);                p18->ctype = ColliderType::WALL;
-
-    PhysBody* p19 = app->physics->CreateRectangle(3232 + 4, 544 + 17, 10, 32, STATIC);                p19->ctype = ColliderType::WALL;
-
-    PhysBody* p20 = app->physics->CreateRectangle(3360 - 4, 544 + 17, 10, 32, STATIC);                p20->ctype = ColliderType::WALL;
-
-    PhysBody* p21 = app->physics->CreateRectangle(3552 + 4, 736, 10, 64, STATIC);                p21->ctype = ColliderType::WALL;
+    PhysBody* p6 = app->physics->CreateRectangle(1024 - 4, 416, 10, 64, STATIC);           p6->ctype = ColliderType::WALL;
+    PhysBody* p7 = app->physics->CreateRectangle(1120 + 4, 416, 10, 64, STATIC);           p7->ctype = ColliderType::WALL;
+    PhysBody* p8 = app->physics->CreateRectangle(1376 - 4, 448 + 17, 10, 160, STATIC);     p8->ctype = ColliderType::WALL;
+    PhysBody* p9 = app->physics->CreateRectangle(1600 - 4, 576, 10, 64, STATIC);           p9->ctype = ColliderType::WALL;
+    PhysBody* p10 = app->physics->CreateRectangle(1856 - 4, 640 + 17, 10, 96, STATIC);     p10->ctype = ColliderType::WALL;
+    PhysBody* p11 = app->physics->CreateRectangle(2304 + 4, 672 + 17, 10, 32, STATIC);     p11->ctype = ColliderType::WALL;
+    PhysBody* p12 = app->physics->CreateRectangle(2592 - 4, 672 + 17, 10, 32, STATIC);     p12->ctype = ColliderType::WALL;
+    PhysBody* p13 = app->physics->CreateRectangle(2688 + 4, 672 + 17, 10, 32, STATIC);     p13->ctype = ColliderType::WALL;
+    PhysBody* p14 = app->physics->CreateRectangle(2720 - 4, 672 + 17, 10, 32, STATIC);     p14->ctype = ColliderType::WALL;
+    PhysBody* p15 = app->physics->CreateRectangle(2816 + 4, 672 + 17, 10, 32, STATIC);     p15->ctype = ColliderType::WALL;
+    PhysBody* p16 = app->physics->CreateRectangle(2880 + 4, 640 + 17, 10, 32, STATIC);     p16->ctype = ColliderType::WALL;
+    PhysBody* p17 = app->physics->CreateRectangle(2944 + 4, 608 + 17, 10, 32, STATIC);     p17->ctype = ColliderType::WALL;
+    PhysBody* p18 = app->physics->CreateRectangle(3072 - 4, 672 + 17, 10, 160, STATIC);    p18->ctype = ColliderType::WALL;
+    PhysBody* p19 = app->physics->CreateRectangle(3232 + 4, 544 + 17, 10, 32, STATIC);     p19->ctype = ColliderType::WALL;
+    PhysBody* p20 = app->physics->CreateRectangle(3360 - 4, 544 + 17, 10, 32, STATIC);     p20->ctype = ColliderType::WALL;
+    PhysBody* p21 = app->physics->CreateRectangle(3552 + 4, 736, 10, 64, STATIC);          p21->ctype = ColliderType::WALL;
 
     //Spikes
     PhysBody* s1 = app->physics->CreateRectangle(864 + 224, 544, 512, 32, STATIC);    s1->ctype = ColliderType::SPIKES;
