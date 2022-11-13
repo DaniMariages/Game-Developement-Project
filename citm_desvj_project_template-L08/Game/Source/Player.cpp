@@ -105,7 +105,12 @@ bool Player::Update()
 {
 
 	// L07 DONE 5: Add physics to the player - updated player position using physics
-
+	if (spawn == true) {
+		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);
+		app->render->camera.x = 122;
+		app->render->camera.x = 672;
+		spawn = false;
+	}
 	int jump = 15; 
 	int speed = 10;
 	int jumponmovement = 20;
@@ -180,7 +185,8 @@ bool Player::Update()
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-		currentAnimation = &punchAnimation;
+		/*currentAnimation = &punchAnimation;*/
+		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);
 	}
 
 	//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL AIRE
@@ -247,11 +253,12 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::WALL:
 		LOG("Collision WALL");
 
-
 		break;
 	case ColliderType::SPIKES:
 		LOG("Collision SPIKES");
-
+		/*app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);*/
+		spawn = true;
+		//spawn = false;
 
 		break;
 	case ColliderType::UNKNOWN:
