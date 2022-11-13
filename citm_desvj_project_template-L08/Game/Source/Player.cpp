@@ -9,6 +9,7 @@
 #include "Point.h"
 #include "Physics.h"
 #include "Item.h"
+#include "EntityManager.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
