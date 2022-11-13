@@ -18,6 +18,9 @@
  <tileset firstgid="26660" name="Reyoh TileSet" tilewidth="32" tileheight="32" tilecount="50" columns="10">
   <image source="Reyoh TileSet.png" width="320" height="160"/>
  </tileset>
+ <tileset firstgid="26710" name="Items" tilewidth="32" tileheight="32" tilecount="15" columns="5">
+  <image source="../Textures/Items.png" width="176" height="112"/>
+ </tileset>
  <layer id="10" name="Capa de patrones 3" width="120" height="24">
   <properties>
    <property name="Draw" type="bool" value="true"/>
@@ -10630,22 +10633,22 @@
    <tile gid="26708"/>
    <tile gid="26671"/>
    <tile gid="26672"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
    <tile gid="26673"/>
    <tile gid="6756"/>
    <tile gid="6757"/>
@@ -11285,13 +11288,13 @@
    <tile gid="26661"/>
    <tile gid="26661"/>
    <tile gid="26662"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
    <tile gid="26663"/>
-   <tile/>
-   <tile/>
-   <tile/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
+   <tile gid="26719"/>
    <tile gid="26660"/>
    <tile gid="26661"/>
    <tile gid="26685"/>

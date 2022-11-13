@@ -249,6 +249,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 
 		break;
+	case ColliderType::SPIKES:
+		LOG("Collision SPIKES");
+
+
+		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
 		break;

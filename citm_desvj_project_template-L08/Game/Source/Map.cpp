@@ -259,6 +259,11 @@ bool Map::Load()
 
     PhysBody* p21 = app->physics->CreateRectangle(3552 + 4, 736, 10, 64, STATIC);                p21->ctype = ColliderType::WALL;
 
+    //Spikes
+    PhysBody* s1 = app->physics->CreateRectangle(864 + 224, 544, 512, 32, STATIC);    s1->ctype = ColliderType::SPIKES;
+    PhysBody* s2 = app->physics->CreateRectangle(2560 + 80, 704, 96, 32, STATIC);    s2->ctype = ColliderType::SPIKES;
+    PhysBody* s3 = app->physics->CreateRectangle(2560 + 208, 704, 96, 32, STATIC);    s3->ctype = ColliderType::SPIKES;
+
 
 
     if(ret == true)
