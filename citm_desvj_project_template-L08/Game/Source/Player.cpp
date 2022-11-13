@@ -108,8 +108,10 @@ bool Player::Update()
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 	if (spawn == true) {
 		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);
-		app->render->camera.x = 122;
-		app->render->camera.x = 672;
+		
+		app->render->camera.x = 0;
+		
+
 		spawn = false;
 	}
 	int jump = 15; 
