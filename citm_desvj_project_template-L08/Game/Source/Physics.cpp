@@ -21,7 +21,7 @@ Physics::Physics() : Module()
 {
 	world = NULL;
 	mouse_joint = NULL;
-	debug = true;
+	debug = false;
 
 }
 
