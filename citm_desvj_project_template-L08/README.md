@@ -6,8 +6,9 @@ Juego de plataformas inspirado en super mario.
 
 ## Key Features
 
+ - F1: Ver Colliders
  - F5: Guardar
- - F6: Cragar
+ - F6: Cargar
  - F10: God mode
  - UP: Mover camara hacia arriba
  - DOWN: Mover camara hacia abajo

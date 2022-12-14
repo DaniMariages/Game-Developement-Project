@@ -39,6 +39,7 @@ public:
 
 	bool SaveState(pugi::xml_node&);
 
+
 public:
 
 	List<Entity*> entities;

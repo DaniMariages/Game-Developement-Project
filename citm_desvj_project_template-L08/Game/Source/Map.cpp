@@ -1,4 +1,3 @@
-
 #include "App.h"
 #include "Render.h"
 #include "Textures.h"
@@ -29,8 +28,56 @@ bool Map::Awake(pugi::xml_node& config)
     mapFileName = config.child("mapfile").attribute("path").as_string();
     mapFolder = config.child("mapfolder").attribute("path").as_string();
  
- 
-    //hay que acceder al mapa de colisiones y encontrar value
+    return ret;
+}
+
+
+bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
+{
+    bool ret = false;
+    ListItem<MapLayer*>* item;
+    item = mapData.maplayers.start;
+
+    for (item = mapData.maplayers.start; item != NULL; item = item->next)
+    {
+        MapLayer* layer = item->data;
+
+        if (layer->properties.GetProperty("Navigation") != NULL && !layer->properties.GetProperty("Navigation")->value)
+            continue;
+
+        uchar* map = new uchar[layer->width * layer->height];
+        memset(map, 1, layer->width * layer->height);
+
+        for (int y = 0; y < mapData.height; ++y)
+        {
+            for (int x = 0; x < mapData.width; ++x)
+            {
+                int i = (y * layer->width) + x;
+
+                int tileId = layer->Get(x, y);
+                TileSet* tileset = (tileId > 0) ? GetTilesetFromTileId(tileId) : NULL;
+
+                if (tileset != NULL)
+                {
+                    //According to the mapType use the ID of the tile to set the walkability value
+                    if (mapData.type == MapTypes::MAPTYPE_ISOMETRIC && tileId == 25) map[i] = 1;
+                    else if (mapData.type == MapTypes::MAPTYPE_ORTHOGONAL && tileId == 50) map[i] = 1;
+                    else map[i] = 0;
+                }
+                else {
+                    LOG("CreateWalkabilityMap: Invalid tileset found");
+                    map[i] = 0;
+                }
+            }
+        }
+
+        *buffer = map;
+        width = mapData.width;
+        height = mapData.height;
+        ret = true;
+
+        break;
+    }
 
     return ret;
 }
@@ -39,21 +86,6 @@ void Map::Draw()
 {
     if(mapLoaded == false)
         return;
-
-    //
-    //// L04: DONE 6: Iterate all tilesets and draw all their 
-    //// images in 0,0 (you should have only one tileset for now)
-
-    //ListItem<TileSet*>* tileset;
-    //tileset = mapData.tilesets.start;
-
-    //while (tileset != NULL) {
-    //    app->render->DrawTexture(tileset->data->texture,0,0);
-    //    tileset = tileset->next;
-    //}
-    //
-
-    // L05: DONE 5: Prepare the loop to draw all tiles in a layer + DrawTexture()
 
     ListItem<MapLayer*>* mapLayerItem;
     mapLayerItem = mapData.maplayers.start;
@@ -80,7 +112,6 @@ void Map::Draw()
                         pos.x,
                         pos.y,
                         &r);
-
                 }
             }
         }
@@ -93,8 +124,42 @@ iPoint Map::MapToWorld(int x, int y) const
 {
     iPoint ret;
 
-    ret.x = x * mapData.tileWidth;
-    ret.y = y * mapData.tileHeight;
+    // L08: DONE 1: Add isometric map to world coordinates
+    if (mapData.type == MAPTYPE_ORTHOGONAL)
+    {
+        ret.x = x * mapData.tileWidth;
+        ret.y = y * mapData.tileHeight;
+    }
+    else if (mapData.type == MAPTYPE_ISOMETRIC)
+    {
+        ret.x = (x - y) * (mapData.tileWidth / 2);
+        ret.y = (x + y) * (mapData.tileHeight / 2);
+    }
+
+    return ret;
+}
+
+iPoint Map::WorldToMap(int x, int y)
+{
+    iPoint ret(0, 0);
+
+    if (mapData.type == MAPTYPE_ORTHOGONAL)
+    {
+        ret.x = x / mapData.tileWidth;
+        ret.y = y / mapData.tileHeight;
+    }
+    else if (mapData.type == MAPTYPE_ISOMETRIC)
+    {
+        float halfWidth = mapData.tileWidth * 0.5f;
+        float halfHeight = mapData.tileHeight * 0.5f;
+        ret.x = int((x / halfWidth + y / halfHeight) / 2);
+        ret.y = int((y / halfHeight - x / halfWidth) / 2);
+    }
+    else
+    {
+        LOG("Unknown map type");
+        ret.x = x; ret.y = y;
+    }
 
     return ret;
 }
@@ -317,6 +382,16 @@ bool Map::LoadMap(pugi::xml_node mapFile)
         mapData.width = map.attribute("width").as_int();
         mapData.tileHeight = map.attribute("tileheight").as_int();
         mapData.tileWidth = map.attribute("tilewidth").as_int();
+
+        mapData.type = MAPTYPE_UNKNOWN;
+        if (strcmp(map.attribute("orientation").as_string(), "isometric") == 0)
+        {
+            mapData.type = MAPTYPE_ISOMETRIC;
+        }
+        if (strcmp(map.attribute("orientation").as_string(), "orthogonal") == 0)
+        {
+            mapData.type = MAPTYPE_ORTHOGONAL;
+        }
     }
 
     return ret;

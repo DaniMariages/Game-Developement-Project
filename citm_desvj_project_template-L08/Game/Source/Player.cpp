@@ -306,14 +306,11 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::SPIKES:
 		LOG("Collision SPIKES");
-		/*app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);*/
 		if (godmode == false)
 		{
 			spawn = true;
 		}
 		
-		//spawn = false;
-
 		break;
 	case ColliderType::UNKNOWN:
 		LOG("Collision UNKNOWN");
