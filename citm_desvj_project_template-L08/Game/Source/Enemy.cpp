@@ -136,8 +136,13 @@ void Enemy::FollowPlayer()
 	//Encontrar la posicion del jugador
 	iPoint playerPosition = app->scene->player->position;
 
+	//Verifica a que posiciones puede andar
+	app->pathfinding->IsWalkable(position);
+
 	//Teniendo la posicion del jugador como objetivo 
 	app->pathfinding->CreatePath(position, playerPosition);
+	
+	position.x += 2;
 	
 }
 
