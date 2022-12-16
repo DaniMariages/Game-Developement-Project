@@ -26,7 +26,7 @@ public:
 
 	bool CleanUp();
 
-	void FollowPlayer();
+	void OnCollision(PhysBody* physA, PhysBody* physB);
 
 public:
 
@@ -46,7 +46,25 @@ public:
 
 	PhysBody* pbody;
 	iPoint position;
-	int pickCoinFxId;
+
+	iPoint enemyPos;
+	iPoint playerPos;
+
+	int directionX = 1;
+	int directionY = 1;
+	float speed = 0.8;
+	bool flying = false;
+	int range;
+
+	enum estado
+	{
+		IDLE,
+		CHASE,
+		DEAD
+	};
+
+	int state = 1;
+
 };
 
 #endif // __PLAYER_H__

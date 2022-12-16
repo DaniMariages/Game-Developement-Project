@@ -45,10 +45,13 @@ bool PathFinding::CheckBoundaries(const iPoint& pos) const
 }
 
 // Utility: returns true is the tile is walkable
-bool PathFinding::IsWalkable(const iPoint& pos) const
+bool PathFinding::IsWalkable(const iPoint& pos, bool flying) const
 {
 	uchar t = GetTileAt(pos);
-	return t != INVALID_WALK_CODE && t > 0;
+
+	if(flying) return t != INVALID_WALK_CODE && t > 0;
+	else return t != INVALID_WALK_CODE && abs(t) > 0;
+	
 }
 
 // Utility: return the walkability value of a tile
@@ -123,29 +126,29 @@ PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), 
 // PathNode -------------------------------------------------------------------------
 // Fills a list (PathList) of all valid adjacent pathnodes
 // ----------------------------------------------------------------------------------
-uint PathNode::FindWalkableAdjacents(PathList& listToFill) const
+uint PathNode::FindWalkableAdjacents(PathList& listToFill, bool flying) const
 {
 	iPoint cell;
 	uint before = listToFill.list.Count();
 
 	// north
 	cell.Create(pos.x, pos.y + 1);
-	if (app->pathfinding->IsWalkable(cell))
+	if (app->pathfinding->IsWalkable(cell, flying))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	// south
 	cell.Create(pos.x, pos.y - 1);
-	if (app->pathfinding->IsWalkable(cell))
+	if (app->pathfinding->IsWalkable(cell, flying))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	// east
 	cell.Create(pos.x + 1, pos.y);
-	if (app->pathfinding->IsWalkable(cell))
+	if (app->pathfinding->IsWalkable(cell, flying))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	// west
 	cell.Create(pos.x - 1, pos.y);
-	if (app->pathfinding->IsWalkable(cell))
+	if (app->pathfinding->IsWalkable(cell, flying))
 		listToFill.list.Add(PathNode(-1, -1, cell, this));
 
 	return listToFill.list.Count();
@@ -173,13 +176,13 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination, bool flying)
 {
 	int ret = -1;
 	int iterations = 0;
 
 	// L12: TODO 1: if origin or destination are not walkable, return -1
-	if (IsWalkable(origin) && IsWalkable(destination))
+	if (IsWalkable(origin, flying) && IsWalkable(destination, flying))
 	{
 		// L12: TODO 2: Create two lists: open, close
 		PathList open;
@@ -219,7 +222,7 @@ int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 
 			// L12: TODO 5: Fill a list of all adjancent nodes
 			PathList adjacent;
-			node->data.FindWalkableAdjacents(adjacent);
+			node->data.FindWalkableAdjacents(adjacent, flying);
 
 			// L12: TODO 6: Iterate adjancent nodes:
 			// If it is a better path, Update the parent

@@ -324,10 +324,15 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			win = true;
 			currentAnimation = &winAnimation;
 		}
-	
+		break;
+
+	case ColliderType::ENEMY:
+		LOG("Collision SPIKES");
+		if (godmode == false)
+		{
+			spawn = true;
+		}
+
 		break;
 	}
-	
-
-
 }

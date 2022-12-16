@@ -12,6 +12,7 @@
 #include "EntityManager.h"
 #include "Enemy.h"
 #include "PathFinding.h"
+#include "Map.h"
 
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
@@ -83,7 +84,10 @@ bool Enemy::Awake()
 	position.x = parameters.attribute("x").as_int();
 	position.y = parameters.attribute("y").as_int();
 	texturePath = parameters.attribute("texturepath").as_string();
-
+	flying = parameters.attribute("flying").as_bool();
+	speed = parameters.attribute("speed").as_float();
+	range = parameters.attribute("range").as_int();
+	
 	return true;
 }
 
@@ -99,7 +103,11 @@ bool Enemy::Start()
 	pbody->listener = this;
 
 	//Asignacion de tipo de collider
-	pbody->ctype = ColliderType::SPIKES; //Se le asigna SPIKES porque cumple su misma funcion
+	pbody->ctype = ColliderType::ENEMY; //Se le asigna SPIKES porque cumple su misma funcion
+
+	//Asignar si el enemigo es volador
+	if (flying) pbody->body->SetGravityScale(0);
+	else pbody->body->SetGravityScale(-GRAVITY_Y);
 
 	//Animacion del enemigo
 	currentAnimation = &idleAnimation;
@@ -110,19 +118,76 @@ bool Enemy::Start()
 bool Enemy::Update()
 {
 	bool PlayerIsAlive = app->scene->player->spawn;
-	
-	if(PlayerIsAlive == false)
-	{
-		FollowPlayer();
-	}
 
 	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
 	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
 
+	enemyPos = app->map->WorldToMap(position.x, position.y);
+	playerPos = app->map->WorldToMap(app->scene->player->position.x, app->scene->player->position.y);
+
 	currentAnimation->Update();
 	SDL_Rect rect = currentAnimation->GetCurrentFrame();
 	app->render->DrawTexture(texture, position.x, position.y, &rect);
+
+	app->pathfinding->CreatePath(enemyPos, playerPos, flying);
+
+	const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+	switch (state)
+	{
+	case IDLE:
+
+		
+		if (flying) pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+		else 
+		{
+			pbody->body->SetLinearVelocity(b2Vec2(directionX * speed, 0));
+			//if (!app->pathfinding->IsWalkable(iPoint(enemyPos.x + directionX, enemyPos.y), flying))(directionX *= -1); ;
+		}
+
+		//Calcular la distancia al jugador, si esta cerca cambia a CHASE
+		if (position.DistanceTo(app->scene->player->position) < range) state = Enemy::CHASE;
+
+		break;
+
+	case CHASE:
+
+		//Si el jugador se acerca deja de seguirlo y cambia a IDLE
+		if (position.DistanceTo(app->scene->player->position) > range) state = Enemy::IDLE;
+
+		//Algoritmo del enemigo para seguir al jugador
+		if (app->pathfinding->GetLastPath()->Count() > 0)
+		{
+			const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+
+			//Calcula el siguiente tile al que puede caminar
+			iPoint pos = app->map->MapToWorld(path->At(1)->x, path->At(1)->y);
+
+			//El enemigo se moverá hacia la derecha
+			if (pos.x > position.x)
+			{
+				directionX = 1;
+				currentAnimation = &rightAnimation;
+			}
+
+			//El enemigo se moverá hacia la izquierda
+			if (pos.x < position.x)
+			{
+				directionX = -1;
+				currentAnimation = &leftAnimation;
+			}
+		}
+
+
+		pbody->body->SetLinearVelocity(b2Vec2(directionX * 2 * speed, -GRAVITY_Y));
+		break;
+
+	case DEAD:
+		break;
+	}
 	
+
+	
+
 	return true;
 }
 
@@ -131,19 +196,60 @@ bool Enemy::CleanUp()
 	return true;
 }
 
-void Enemy::FollowPlayer()
-{
-	//Encontrar la posicion del jugador
-	iPoint playerPosition = app->scene->player->position;
+void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
-	//Verifica a que posiciones puede andar
-	app->pathfinding->IsWalkable(position);
+	// L07 DONE 7: Detect the type of collision
 
-	//Teniendo la posicion del jugador como objetivo 
-	app->pathfinding->CreatePath(position, playerPosition);
-	
-	position.x += 2;
-	
+	switch (physB->ctype)
+	{
+	case ColliderType::ITEM:
+
+		LOG("Collision ITEM");
+		break;
+
+	case ColliderType::PLATFORM:
+
+		LOG("Collision PLATFORM");
+		break;
+
+	case ColliderType::WALL:
+
+		LOG("Collision WALL");
+
+		if (directionX == 1)
+		{
+			directionX = -1;
+			currentAnimation = &leftAnimation;
+		}
+		else 
+		{
+			directionX = 1;
+			currentAnimation = &rightAnimation;
+		}
+
+		break;
+
+	case ColliderType::SPIKES:
+
+		LOG("Collision SPIKES");
+		break;
+
+	case ColliderType::UNKNOWN:
+
+		LOG("Collision UNKNOWN");
+		break;
+
+	case ColliderType::WIN:
+
+		LOG("Collision WIN");
+		break;
+
+	case ColliderType::ENEMY:
+
+		LOG("Collision SPIKES");
+		break;
+
+	}
 }
 
 

@@ -159,7 +159,7 @@ bool Scene::Update(float dt)
 	{
 		if (originSelected == true)
 		{
-			app->pathfinding->CreatePath(origin, mouseTile);
+			app->pathfinding->CreatePath(origin, mouseTile, false);
 			originSelected = false;
 		}
 		else

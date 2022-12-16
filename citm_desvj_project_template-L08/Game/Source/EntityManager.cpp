@@ -158,3 +158,18 @@ bool EntityManager::SaveState(pugi::xml_node& data)
 
 	return true;
 }
+
+Entity* EntityManager::GetPlayer()
+{
+	// Find the player entity in the list of entities
+	for (int i = 0; i < entities.Count(); i++)
+	{
+		Entity* entity = entities[i];
+		if (entity->type == EntityType::PLAYER)
+		{
+			return entity;
+		}
+	}
+
+	return nullptr;
+}

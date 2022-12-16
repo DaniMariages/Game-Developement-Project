@@ -39,6 +39,7 @@ public:
 
 	bool SaveState(pugi::xml_node&);
 
+	Entity* EntityManager::GetPlayer();
 
 public:
 
