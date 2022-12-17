@@ -43,13 +43,29 @@ public:
 	//Declaracion de los atributos del Enemigo
 	Enemy* enemy;
 
+	enum scenes
+	{
+		INTRO,
+		GAME,
+		LOSE,
+		WIN
+	};
+
+	int scene;
+
 private:
-	SDL_Texture* img;
+	SDL_Texture* intro;
+	SDL_Texture* lose;
 	SDL_Texture* mouseTileTex = nullptr;
 	SDL_Texture* originTex = nullptr;
 
 	iPoint origin;
 	bool originSelected = false;
+
+	int posicion;
+	int limiteIzq;
+	int limiteDer;
+
 };
 
 #endif // __SCENE_H__

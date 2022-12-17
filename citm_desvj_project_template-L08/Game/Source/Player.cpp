@@ -118,179 +118,180 @@ bool Player::Start() {
 bool Player::Update()
 {
 	
-
-	// L07 DONE 5: Add physics to the player - updated player position using physics
-	if (spawn == true) {
-		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);
-		app->render->camera.x = 0;
-		currentAnimation = &idleAnimation;
-		spawn = false;
-		win = false;
-	}
-
-	int jump = 15; 
-	int speed = 10;
-	int jumponmovement = 20;
-	float dump = 300;
-	
-	pbody->body->SetAngularDamping(dump);
-	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
-	b2Vec2 velcero = b2Vec2(0, 0);
-	
-	switch (state)
+	if (app->scene->scene == app->scene->GAME)
 	{
-	case IDLE:
-		//if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) state = Player::ATTACK;
-		//break;
-
-	case ATTACK:
-		break;
-
-	case DEAD:
-		break;
-	}
-
-	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
-	
-	//SALTO
-	if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && OnAir == false) {
-
-		pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		OnAir = true;
-
-		pbody->body->ApplyLinearImpulse(b2Vec2(0, -jump), pbody->body->GetPosition(), true);
-		currentAnimation = &jumpAnimation;
-
-	}
-
-	//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL SUELO
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && OnAir == false) {
-		vel = b2Vec2(-speed, jump);
-		pbody->body->SetLinearVelocity(vel);
-		currentAnimation = &leftAnimation;
-	}
-	//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL AIRE
-	else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN && OnAir == true && abletoimpulse == true)
-	{
-		pbody->body->ApplyLinearImpulse(b2Vec2(-4, 0), pbody->body->GetPosition(), true);
-		abletoimpulse = false;
-	}
-
-
-	//MOVIMIENTO A LA DERECHA ESTANDO EN EL SUELO
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && OnAir == false) {
-		vel = b2Vec2(speed, jump);
-		pbody->body->SetLinearVelocity(vel);
-		currentAnimation = &rightAnimation;
-	}
-	//MOVIMIENTO A LA DERECHA ESTANDO EN EL AIRE
-	else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN && OnAir == true && abletoimpulse == true)
-	{
-		pbody->body->ApplyLinearImpulse(b2Vec2(4, 0), pbody->body->GetPosition(), true);
-		abletoimpulse = false;
-	}
-
-
-	//SALTO DIAGONAL HACIA LA IZQUIERDA
-	if ((app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)) {
-		vel = b2Vec2(-6, -jumponmovement);
-		pbody->body->SetLinearVelocity(vel);
-		currentAnimation = &jumpleftAnimation;
-	}
-	//SALTO DIAGONAL HACIA LA DERECHA
-	if ((app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)) {
-		vel = b2Vec2(6, -jumponmovement);
-		pbody->body->SetLinearVelocity(vel);
-		currentAnimation = &jumpAnimation;
-	}
-
-	//MOVIMIENTO Y GOLPE
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
-		currentAnimation = &punchAnimation;
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
-		vel = b2Vec2(0, 0);
-		currentAnimation = &punchleftAnimation;
-	}
-
-	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-		state = Player::ATTACK;
-		currentAnimation = &punchAnimation;
-		/*app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);*/
-	}
-
-	//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL AIRE
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP && OnAir == true) {
-		
-		pbody->body->SetLinearVelocity(pbody->body->GetLinearVelocity());
-		currentAnimation = &idleAnimation;
-	}
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP && OnAir == true) {
-		pbody->body->SetLinearVelocity(pbody->body->GetLinearVelocity());
-		currentAnimation = &leftidleAnimation;
-	}
-
-	//VOLVER A LA ANIMACION NORMAL CUANDO ACABAS DE PEGAR
-	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_UP) {
-		state = Player::IDLE;
-		currentAnimation = &idleAnimation;
-	}
-
-	//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL SUELO
-	if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP && OnAir == false) {
-		pbody->body->SetLinearVelocity(velcero);
-		currentAnimation = &idleAnimation;
-	}
-	if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP && OnAir == false) {
-		pbody->body->SetLinearVelocity(velcero);
-		currentAnimation = &leftidleAnimation;
-	}
-
-	//GodMode
-	if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) 
-	{
-		if (godmode == false) godmode = true;
-		else godmode = false;
-	}
-	
-
-	if (godmode == true)
-	{
-	
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-			vel = b2Vec2(0, -speed);
-		}
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-			vel = b2Vec2(0, speed);
+		// L07 DONE 5: Add physics to the player - updated player position using physics
+		if (spawn == true) {
+			app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);
+			app->render->camera.x = 0;
+			currentAnimation = &idleAnimation;
+			spawn = false;
+			win = false;
 		}
 
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-			vel = b2Vec2(-speed, 0);
+		int jump = 15;
+		int speed = 10;
+		int jumponmovement = 20;
+		float dump = 300;
+
+		pbody->body->SetAngularDamping(dump);
+		b2Vec2 vel = b2Vec2(0, -GRAVITY_Y);
+		b2Vec2 velcero = b2Vec2(0, 0);
+
+		switch (state)
+		{
+		case IDLE:
+			//if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) state = Player::ATTACK;
+			//break;
+
+		case ATTACK:
+			break;
+
+		case DEAD:
+			break;
 		}
 
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-			vel = b2Vec2(speed, 0);
+		//L02: DONE 4: modify the position of the player using arrow keys and render the texture
+
+		//SALTO
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && OnAir == false) {
+
+			pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+			OnAir = true;
+
+			pbody->body->ApplyLinearImpulse(b2Vec2(0, -jump), pbody->body->GetPosition(), true);
+			currentAnimation = &jumpAnimation;
+
 		}
 
-		pbody->body->SetLinearVelocity(vel);
+		//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL SUELO
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && OnAir == false) {
+			vel = b2Vec2(-speed, jump);
+			pbody->body->SetLinearVelocity(vel);
+			currentAnimation = &leftAnimation;
+		}
+		//MOVIMIENTO A LA IZQUIERDA ESTANDO EN EL AIRE
+		else if (app->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN && OnAir == true && abletoimpulse == true)
+		{
+			pbody->body->ApplyLinearImpulse(b2Vec2(-4, 0), pbody->body->GetPosition(), true);
+			abletoimpulse = false;
+		}
+
+
+		//MOVIMIENTO A LA DERECHA ESTANDO EN EL SUELO
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && OnAir == false) {
+			vel = b2Vec2(speed, jump);
+			pbody->body->SetLinearVelocity(vel);
+			currentAnimation = &rightAnimation;
+		}
+		//MOVIMIENTO A LA DERECHA ESTANDO EN EL AIRE
+		else if (app->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN && OnAir == true && abletoimpulse == true)
+		{
+			pbody->body->ApplyLinearImpulse(b2Vec2(4, 0), pbody->body->GetPosition(), true);
+			abletoimpulse = false;
+		}
+
+
+		//SALTO DIAGONAL HACIA LA IZQUIERDA
+		if ((app->input->GetKey(SDL_SCANCODE_A) && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)) {
+			vel = b2Vec2(-6, -jumponmovement);
+			pbody->body->SetLinearVelocity(vel);
+			currentAnimation = &jumpleftAnimation;
+		}
+		//SALTO DIAGONAL HACIA LA DERECHA
+		if ((app->input->GetKey(SDL_SCANCODE_D) && app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)) {
+			vel = b2Vec2(6, -jumponmovement);
+			pbody->body->SetLinearVelocity(vel);
+			currentAnimation = &jumpAnimation;
+		}
+
+		//MOVIMIENTO Y GOLPE
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
+			currentAnimation = &punchAnimation;
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT && app->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT) {
+			vel = b2Vec2(0, 0);
+			currentAnimation = &punchleftAnimation;
+		}
+
+		if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
+			state = Player::ATTACK;
+			currentAnimation = &punchAnimation;
+			/*app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);*/
+		}
+
+		//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL AIRE
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP && OnAir == true) {
+
+			pbody->body->SetLinearVelocity(pbody->body->GetLinearVelocity());
+			currentAnimation = &idleAnimation;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP && OnAir == true) {
+			pbody->body->SetLinearVelocity(pbody->body->GetLinearVelocity());
+			currentAnimation = &leftidleAnimation;
+		}
+
+		//VOLVER A LA ANIMACION NORMAL CUANDO ACABAS DE PEGAR
+		if (app->input->GetKey(SDL_SCANCODE_K) == KEY_UP) {
+			state = Player::IDLE;
+			currentAnimation = &idleAnimation;
+		}
+
+		//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL SUELO
+		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_UP && OnAir == false) {
+			pbody->body->SetLinearVelocity(velcero);
+			currentAnimation = &idleAnimation;
+		}
+		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_UP && OnAir == false) {
+			pbody->body->SetLinearVelocity(velcero);
+			currentAnimation = &leftidleAnimation;
+		}
+
+		//GodMode
+		if (app->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
+		{
+			if (godmode == false) godmode = true;
+			else godmode = false;
+		}
+
+
+		if (godmode == true)
+		{
+
+			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
+				vel = b2Vec2(0, -speed);
+			}
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
+				vel = b2Vec2(0, speed);
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+				vel = b2Vec2(-speed, 0);
+			}
+
+			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+				vel = b2Vec2(speed, 0);
+			}
+
+			pbody->body->SetLinearVelocity(vel);
+		}
+
+		if (win == true) {
+			pbody->body->SetLinearVelocity(b2Vec2(10, 0));
+		}
+
+		//Update player position in pixels
+		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
+		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
+
+		currentAnimation->Update();
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+		app->render->DrawTexture(texture, position.x, position.y, &rect);
+
+		//app->scene->player->win = false;
+
 	}
-
-	if (win == true) {
-		pbody->body->SetLinearVelocity(b2Vec2(10, 0));
-	}
-
-	//Update player position in pixels
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
-
-	currentAnimation->Update();
-	SDL_Rect rect = currentAnimation->GetCurrentFrame();
-	app->render->DrawTexture(texture, position.x, position.y, &rect);
-
-	//app->scene->player->win = false;
-
-	
 
 	return true;
 }
@@ -325,8 +326,10 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 	case ColliderType::SPIKES:
 		LOG("Collision SPIKES");
+
 		if (godmode == false)
 		{
+			app->scene->scene = app->scene->LOSE;
 			spawn = true;
 		}
 		
@@ -348,7 +351,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ENEMY:
 		LOG("Collision ENEMY");
 
-		if (godmode == false){
+		if (godmode == false)
+		{
+			app->scene->scene = app->scene->LOSE;
 			spawn = true;
 		}
 

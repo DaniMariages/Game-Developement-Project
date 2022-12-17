@@ -31,6 +31,8 @@ bool Scene::Awake(pugi::xml_node& config)
 
 	// iterate all objects in the scene
 	// Check https://pugixml.org/docs/quickstart.html#access
+
+	
 	for (pugi::xml_node itemNode = config.child("item"); itemNode; itemNode = itemNode.next_sibling("item"))
 	{
 		Item* item = (Item*)app->entityManager->CreateEntity(EntityType::ITEM);
@@ -41,9 +43,13 @@ bool Scene::Awake(pugi::xml_node& config)
 	player = (Player*)app->entityManager->CreateEntity(EntityType::PLAYER);
 	player->parameters = config.child("player");
 
-	//Creacion del enemigo
-	enemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
-	enemy->parameters = config.child("enemy");
+	//Loop para crear varios enemigos
+	for (pugi::xml_node itemNode = config.child("enemy"); itemNode; itemNode = itemNode.next_sibling("enemy"))
+	{
+			Enemy* enemy = (Enemy*)app->entityManager->CreateEntity(EntityType::ENEMY);
+			enemy->parameters = itemNode;
+	}
+	
 
 	return ret;
 }
@@ -51,8 +57,10 @@ bool Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Scene::Start()
 {
-	//img = app->tex->Load("Assets/Textures/test.png");
-	//app->audio->PlayMusic("Assets/Audio/Music/music_spy.ogg");
+	intro = app->tex->Load("Assets/Textures/intro.png");
+	lose = app->tex->Load("Assets/Textures/lose.png");
+	
+	scene = app->scene->INTRO;
 	
 	// L03: DONE: Load map
 	bool retLoad = app->map->Load();
@@ -124,63 +132,114 @@ bool Scene::Update(float dt)
 
 	//app->render->DrawTexture(img, 380, 100); // Placeholder not needed any more
 
-	//Limites de la camara
-	int posicion = player->position.x;
-	int limiteIzq = app->map->mapData.width + 330; 
-	int limiteDer = app->map->mapData.width + 3149; 
-	
-	//Camara siguiendo al jugador
-	if (limiteIzq <= posicion && posicion <= limiteDer) app->render->camera.x = -posicion + 450;
-
-	// Draw map
-	app->map->Draw();
-
-	// L08: DONE 3: Test World to map method
-	int mouseX, mouseY;
-	app->input->GetMousePosition(mouseX, mouseY);
-
-	iPoint mouseTile = iPoint(0, 0);
-
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
-			mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
-	}
-	if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-		mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
-			mouseY - app->render->camera.y);
-	}
-
-	//Convert again the tile coordinates to world coordinates to render the texture of the tile
-	iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
-	app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
-
-	//Test compute path function
-	if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	switch (scene)
 	{
-		if (originSelected == true)
-		{
-			app->pathfinding->CreatePath(origin, mouseTile, false);
-			originSelected = false;
-		}
-		else
-		{
-			origin = mouseTile;
-			originSelected = true;
-			app->pathfinding->ClearLastPath();
-		}
+	case app->scene->INTRO:
+
+		app->render->DrawTexture(intro, 300, 100);
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->GAME;
+
+		break;
+
+
+	case app->scene->GAME:
+
+		//Limites de la camara
+		posicion = player->position.x;
+		limiteIzq = app->map->mapData.width + 330;
+		limiteDer = app->map->mapData.width + 3149;
+
+		//Camara siguiendo al jugador
+		if (limiteIzq <= posicion && posicion <= limiteDer) app->render->camera.x = -posicion + 450;
+
+		// Draw map
+		app->map->Draw();
+
+		//// L08: DONE 3: Test World to map method
+		//int mouseX, mouseY;
+		//app->input->GetMousePosition(mouseX, mouseY);
+
+		//iPoint mouseTile = iPoint(0, 0);
+
+		//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
+		//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
+		//		mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
+		//}
+		//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
+		//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
+		//		mouseY - app->render->camera.y);
+		//}
+
+		////Convert again the tile coordinates to world coordinates to render the texture of the tile
+		//iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
+		//app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
+
+		//const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+		//for (uint i = 0; i < path->Count(); ++i)
+		//{
+		//	iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+		//	app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
+		//}
+
+		break;
+
+	case app->scene->LOSE:
+
+		app->render->DrawTexture(lose, 300, 200);
+
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
 	}
+
+	//// Draw map
+	//app->map->Draw();
+
+	//// L08: DONE 3: Test World to map method
+	//int mouseX, mouseY;
+	//app->input->GetMousePosition(mouseX, mouseY);
+
+	//iPoint mouseTile = iPoint(0, 0);
+
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
+	//		mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
+	//}
+	//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
+	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
+	//		mouseY - app->render->camera.y);
+	//}
+
+	////Convert again the tile coordinates to world coordinates to render the texture of the tile
+	//iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
+	//app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
+
+	////Test compute path function
+	//if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+	//{
+	//	if (originSelected == true)
+	//	{
+	//		app->pathfinding->CreatePath(origin, mouseTile, false);
+	//		originSelected = false;
+	//	}
+	//	else
+	//	{
+	//		origin = mouseTile;
+	//		originSelected = true;
+	//		app->pathfinding->ClearLastPath();
+	//	}
+	//}
 
 	// L12: Get the latest calculated path and draw
-	const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-	for (uint i = 0; i < path->Count(); ++i)
-	{
-		iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-		app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
-	}
+	//const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+	//for (uint i = 0; i < path->Count(); ++i)
+	//{
+	//	iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+	//	app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
+	//}
 
-	// L12: Debug pathfinding
-	iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
-	app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
+	//// L12: Debug pathfinding
+	//iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
+	//app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
 
 	return true;
 }

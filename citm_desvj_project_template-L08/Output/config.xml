@@ -24,7 +24,9 @@
   <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
   <scene>
     <player x="112" y="672" texturepath="Assets/Textures/PJ3.0.png"/>
-	<enemy x="450" y="530" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="false" range="100"/>
+	<enemy x="450" y="530" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="false" range="200"/>
+	<enemy x="300" y="700" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+
   </scene>
 
   <map>

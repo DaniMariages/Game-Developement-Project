@@ -108,7 +108,7 @@ bool Enemy::Start()
 	pbody->listener = this;
 
 	//Asignacion de tipo de collider
-	pbody->ctype = ColliderType::ENEMY; //Se le asigna SPIKES porque cumple su misma funcion
+	pbody->ctype = ColliderType::ENEMY;
 
 	//Asignar si el enemigo es volador
 	if (flying) pbody->body->SetGravityScale(0);
@@ -122,82 +122,119 @@ bool Enemy::Start()
 
 bool Enemy::Update()
 {
-	bool PlayerIsAlive = app->scene->player->spawn;
-
-	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
-	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
-
-	enemyPos = app->map->WorldToMap(position.x, position.y);
-	playerPos = app->map->WorldToMap(app->scene->player->position.x, app->scene->player->position.y);
-
-	currentAnimation->Update();
-	SDL_Rect rect = currentAnimation->GetCurrentFrame();
-	app->render->DrawTexture(texture, position.x, position.y, &rect);
-
-	app->pathfinding->CreatePath(enemyPos, playerPos, flying);
-
-	if (spawn == true) {
-		app->scene->enemy->pbody->body->SetTransform({ PIXEL_TO_METERS(parameters.attribute("x").as_int()),PIXEL_TO_METERS(parameters.attribute("y").as_int())}, 0);
-		currentAnimation = &idleAnimation;
-		spawn = false;
-	}
-
-	const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-	switch (state)
+	if (app->scene->scene == app->scene->INTRO)
 	{
-	case IDLE:
-
-		
-		if (flying) pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-		else 
-		{
-			pbody->body->SetLinearVelocity(b2Vec2(directionX * speed, 0));
-			//if (!app->pathfinding->IsWalkable(iPoint(enemyPos.x + directionX, enemyPos.y), flying))(directionX *= -1); ;
-		}
-
-		//Calcular la distancia al jugador, si esta cerca cambia a CHASE
-		if (position.DistanceTo(app->scene->player->position) < range) state = Enemy::CHASE;
-
-		break;
-
-	case CHASE:
-
-		//Si el jugador se acerca deja de seguirlo y cambia a IDLE
-		if (position.DistanceTo(app->scene->player->position) > range) state = Enemy::IDLE;
-
-		//Algoritmo del enemigo para seguir al jugador
-		if (app->pathfinding->GetLastPath()->Count() > 0)
-		{
-			const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-
-			//Calcula el siguiente tile al que puede caminar
-			iPoint pos = app->map->MapToWorld(path->At(1)->x, path->At(1)->y);
-
-			//El enemigo se moverá hacia la derecha
-			if (pos.x > position.x)
-			{
-				directionX = 1;
-				currentAnimation = &rightAnimation;
-			}
-
-			//El enemigo se moverá hacia la izquierda
-			if (pos.x < position.x)
-			{
-				directionX = -1;
-				currentAnimation = &leftAnimation;
-			}
-		}
-
-
-		pbody->body->SetLinearVelocity(b2Vec2(directionX * 2 * speed, -GRAVITY_Y));
-		break;
-
-	case DEAD:
-		break;
+		pbody->body->SetTransform({ PIXEL_TO_METERS(parameters.attribute("x").as_int()),
+			PIXEL_TO_METERS(parameters.attribute("y").as_int()) }, 0);
+		currentAnimation = &idleAnimation;
 	}
-	
 
-	
+	if (app->scene->scene == app->scene->GAME)
+	{
+		bool PlayerIsAlive = app->scene->player->spawn;
+
+		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 10;
+		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 10;
+
+		enemyPos = app->map->WorldToMap(position.x, position.y);
+		playerPos = app->map->WorldToMap(app->scene->player->position.x, app->scene->player->position.y);
+
+		currentAnimation->Update();
+		SDL_Rect rect = currentAnimation->GetCurrentFrame();
+		app->render->DrawTexture(texture, position.x, position.y, &rect);
+
+		app->pathfinding->CreatePath(enemyPos, playerPos, flying);
+
+		const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+		switch (state)
+		{
+		case IDLE:
+
+			if (flying) pbody->body->SetLinearVelocity(b2Vec2(0, 0));
+			else
+			{
+				pbody->body->SetLinearVelocity(b2Vec2(directionX * speed, 0));
+				if (app->pathfinding->IsWalkable(iPoint(enemyPos.x + directionX, enemyPos.y), flying))(directionX *= -1); ;
+			}
+
+			//Calcular la distancia al jugador, si esta cerca cambia a CHASE
+			if (position.DistanceTo(app->scene->player->position) < range) state = Enemy::CHASE;
+
+			break;
+
+		case CHASE:
+
+			//Si el jugador se acerca deja de seguirlo y cambia a IDLE
+			if (position.DistanceTo(app->scene->player->position) > range) state = Enemy::IDLE;
+
+			if (flying)
+			{
+				if (app->pathfinding->GetLastPath()->Count() > 0)
+				{
+					const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+
+					//Calcula el siguiente tile al que puede caminar
+					iPoint pos = app->map->MapToWorld(path->At(1)->x, path->At(1)->y);
+
+					if (pos.x > position.x)
+					{
+						directionX = 1;
+					}
+					if (pos.x < position.x)
+					{
+						directionX = -1;
+					}
+
+					if (pos.y > position.y)
+					{
+						directionY = -1;
+					}
+					if (pos.y < position.y)
+					{
+						directionY = 1;
+					}
+				}
+
+				pbody->body->SetLinearVelocity(b2Vec2(directionX * 2 * speed, -directionY * 2 * speed));
+			}
+
+			else
+			{
+				//Algoritmo del enemigo para seguir al jugador
+				if (app->pathfinding->GetLastPath()->Count() > 0)
+				{
+					const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+
+					//Calcula el siguiente tile al que puede caminar
+					iPoint pos = app->map->MapToWorld(path->At(1)->x, path->At(1)->y);
+
+					//El enemigo se moverá hacia la derecha
+					if (pos.x > position.x)
+					{
+						directionX = 1;
+						currentAnimation = &rightAnimation;
+					}
+
+					//El enemigo se moverá hacia la izquierda
+					if (pos.x < position.x)
+					{
+						directionX = -1;
+						currentAnimation = &leftAnimation;
+					}
+				}
+
+				pbody->body->SetLinearVelocity(b2Vec2(directionX * 2 * speed, -GRAVITY_Y));
+			}
+
+
+			break;
+
+		case DEAD:
+			break;
+		}
+
+
+	}
 
 	return true;
 }
@@ -207,10 +244,8 @@ bool Enemy::CleanUp()
 	return true;
 }
 
-void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
-
-	// L07 DONE 7: Detect the type of collision
-
+void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) 
+{
 	switch (physB->ctype)
 	{
 	case ColliderType::ITEM:
@@ -269,7 +304,11 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::PLAYER:
 
 		LOG("Collision PLAYER");
-		spawn = true;
+
+		b2Vec2 Position = b2Vec2(position.x, position.y);
+		
+		pbody->body->SetTransform(Position, 0);
+		currentAnimation = &idleAnimation;
 
 		break;
 
