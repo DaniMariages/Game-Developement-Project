@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "Point.h"
 #include "Animation.h"
+#include "Enemy.h"
 #include "SDL/include/SDL.h"
 
 struct SDL_Texture;
@@ -53,9 +54,21 @@ public:
 	bool spawn = false;
 	bool win = false;
 	bool godmode = false;
+	bool attack = false;
+
+	enum estado
+	{
+		IDLE,
+		ATTACK,
+		DEAD
+	};
+
+	int state = 1;
 
 	// L07 DONE 5: Add physics to the player - declare a Physics body
 	PhysBody* pbody;
+	PhysBody* abody2;
+
 
 	int pickCoinFxId;
 };

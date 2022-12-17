@@ -55,6 +55,7 @@ public:
 	float speed = 0.3;
 	bool flying = false;
 	int range;
+	bool spawn = false;
 
 	enum estado
 	{

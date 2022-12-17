@@ -136,6 +136,12 @@ bool Enemy::Update()
 
 	app->pathfinding->CreatePath(enemyPos, playerPos, flying);
 
+	if (spawn == true) {
+		app->scene->enemy->pbody->body->SetTransform({ PIXEL_TO_METERS(parameters.attribute("x").as_int()),PIXEL_TO_METERS(parameters.attribute("y").as_int())}, 0);
+		currentAnimation = &idleAnimation;
+		spawn = false;
+	}
+
 	const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
 	switch (state)
 	{
@@ -234,6 +240,12 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 		break;
 
+	case ColliderType::ATTACK:
+
+		LOG("Collision ATTACK");
+
+		break;
+
 	case ColliderType::SPIKES:
 
 		LOG("Collision SPIKES");
@@ -252,6 +264,13 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB) {
 	case ColliderType::ENEMY:
 
 		LOG("Collision SPIKES");
+		break;
+
+	case ColliderType::PLAYER:
+
+		LOG("Collision PLAYER");
+		spawn = true;
+
 		break;
 
 	}

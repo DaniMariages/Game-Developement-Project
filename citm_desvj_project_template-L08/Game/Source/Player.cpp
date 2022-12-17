@@ -10,6 +10,7 @@
 #include "Physics.h"
 #include "Item.h"
 #include "EntityManager.h"
+#include "Enemy.h"
 
 Player::Player() : Entity(EntityType::PLAYER)
 {
@@ -116,6 +117,7 @@ bool Player::Start() {
 
 bool Player::Update()
 {
+	
 
 	// L07 DONE 5: Add physics to the player - updated player position using physics
 	if (spawn == true) {
@@ -134,6 +136,19 @@ bool Player::Update()
 	pbody->body->SetAngularDamping(dump);
 	b2Vec2 vel = b2Vec2(0, -GRAVITY_Y); 
 	b2Vec2 velcero = b2Vec2(0, 0);
+	
+	switch (state)
+	{
+	case IDLE:
+		//if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) state = Player::ATTACK;
+		//break;
+
+	case ATTACK:
+		break;
+
+	case DEAD:
+		break;
+	}
 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	
@@ -200,8 +215,9 @@ bool Player::Update()
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_DOWN) {
-		/*currentAnimation = &punchAnimation;*/
-		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);
+		state = Player::ATTACK;
+		currentAnimation = &punchAnimation;
+		/*app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(122),PIXEL_TO_METERS(672) }, 0);*/
 	}
 
 	//QUEDARSE QUIETO AL DEJAR DE PULSAR EN EL AIRE
@@ -217,6 +233,7 @@ bool Player::Update()
 
 	//VOLVER A LA ANIMACION NORMAL CUANDO ACABAS DE PEGAR
 	if (app->input->GetKey(SDL_SCANCODE_K) == KEY_UP) {
+		state = Player::IDLE;
 		currentAnimation = &idleAnimation;
 	}
 
@@ -273,6 +290,8 @@ bool Player::Update()
 
 	//app->scene->player->win = false;
 
+	
+
 	return true;
 }
 
@@ -327,12 +346,14 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		break;
 
 	case ColliderType::ENEMY:
-		LOG("Collision SPIKES");
-		if (godmode == false)
-		{
+		LOG("Collision ENEMY");
+
+		if (godmode == false){
 			spawn = true;
 		}
 
+		
+		
 		break;
 	}
 }
