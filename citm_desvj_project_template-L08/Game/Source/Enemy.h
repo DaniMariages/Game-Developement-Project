@@ -52,7 +52,7 @@ public:
 
 	int directionX = 1;
 	int directionY = 1;
-	float speed = 0.8;
+	float speed = 0.3;
 	bool flying = false;
 	int range;
 

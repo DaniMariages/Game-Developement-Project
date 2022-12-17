@@ -20,22 +20,26 @@ Enemy::Enemy() : Entity(EntityType::ENEMY)
 	name.Create("Enemy");
 
 	//Right animation
-	rightAnimation.PushBack({ 32, 292, 18, 26 });
-	rightAnimation.PushBack({ 62, 290, 22, 26 });
-	rightAnimation.PushBack({ 96, 292, 18, 26 });
+	rightAnimation.PushBack({ 377,122,32,25 });
+	rightAnimation.PushBack({ 347,121,29,25 });
+	rightAnimation.PushBack({ 314,122,30,26 });
+	rightAnimation.PushBack({ 281,122,32,26 });
+	rightAnimation.PushBack({ 249,120,32,25 });
+	rightAnimation.PushBack({ 217,122,32,25 });
 	rightAnimation.speed = 0.12f;
 
 	//Idle animation
-	idleAnimation.PushBack({ 30,228,20,26 });
-	idleAnimation.PushBack({ 62,226,20,28 });
-	idleAnimation.PushBack({ 94,228,20,26 });
-	idleAnimation.PushBack({ 126,228,20,26 });
+	leftAnimation.PushBack({ 217,26,32,24 });
+	leftAnimation.PushBack({ 249,26,33,24 });
 	idleAnimation.speed = 0.05f;
 
 	//left animation
-	leftAnimation.PushBack({ 96,330,18,26 });
-	leftAnimation.PushBack({ 62,328,22,26 });
-	leftAnimation.PushBack({ 32,330,18,26 });
+	leftAnimation.PushBack({ 217,26,32,24 });
+	leftAnimation.PushBack({ 251,55,29,26 });
+	leftAnimation.PushBack({ 282,57,30,26 });
+	leftAnimation.PushBack({ 312,57,34,26 });
+	leftAnimation.PushBack({ 345,56,33,25 });
+	leftAnimation.PushBack({ 377,58,32,25 });
 	leftAnimation.speed = 0.12f;
 
 	//Jump animation
@@ -63,6 +67,7 @@ Enemy::Enemy() : Entity(EntityType::ENEMY)
 	leftidleAnimation.PushBack({ 151,192,20,28 });
 	leftidleAnimation.PushBack({ 119,194,20,26 });
 	leftidleAnimation.PushBack({ 87,194,20,26 });
+	leftidleAnimation.PushBack({ 345,56,33,25 });
 	leftidleAnimation.speed = 0.03f;
 
 	//Win animation
