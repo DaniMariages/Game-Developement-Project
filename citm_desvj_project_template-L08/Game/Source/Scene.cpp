@@ -173,9 +173,13 @@ bool Scene::Update(float dt)
 		break;
 
 	case app->scene->WIN:
-		app->render->DrawTexture(win, posicion, app->render->camera.y);
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) { 
-			scene = app->scene->INTRO; }
+		app->render->DrawTexture(win, posicion - 450, app->render->camera.y);
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+			app->render->camera.y = 0;
+			app->render->camera.x = 0;
+			scene = app->scene->INTRO;
+			break;
+		}
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) 
