@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<save_state>
+	<input />
+	<window />
+	<textures />
+	<audio />
+	<:anonymous />
+	<pathfinding />
+	<scene />
+	<entitymanager>
+		<player x="3614" y="677" />
+		<enemies>
+			<enemy x="0" y="0" />
+			<enemy x="0" y="0" />
+			<enemy x="0" y="0" />
+			<enemy x="0" y="0" />
+			<enemy x="0" y="0" />
+		</enemies>
+	</entitymanager>
+	<map />
+	<renderer>
+		<camera x="-2817" y="0" />
+	</renderer>
+</save_state>

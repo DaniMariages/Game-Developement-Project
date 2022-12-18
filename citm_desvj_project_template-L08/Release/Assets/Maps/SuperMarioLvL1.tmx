@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.5" orientation="orthogonal" renderorder="left-up" width="240" height="13" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="1">
- <tileset firstgid="1" source="../../../../../../../Desktop/Overworld.tsx"/>
- <layer id="1" name="Tile Layer 1" width="240" height="13">
-  <data encoding="base64" compression="zlib">
-   eJztmF9Og0AQh/dFCpyh6knUFw9g0kNUTfVBL+JdbFLrv/jQE6iJD3qD9hDuBDYOY4EObAHl9/AlDVvKj818zJSlMWYJAAAAAAAAAACAWqw6kKFNDiJjDhlHUXZ9MjDmgnE9aD8z6DcrJfzcV1vfb5b3yE+Gq9QJ+nwTZOFrbT1nZvb6L4znLTjs9rTtugDdpaqv/NxhbMyuZc+yH9fPRH4+MSeku3ytK/76dtj3noK/h/RP9q0qyGtQnY0tp5Yzy3n8e7Ys45LVvPNzIZz4ZO768qVsRi5inb++HHbu0p7epnt6jz7ca2TfomPSR42/vO86d6dxMj9Tbd8pmLN6H4XGhOGPv9wJt7btuXUT8vytm0m6O03d3UEP7i28py0KZk9NH85zl36njr9EkadNOVzWm4v8rZppnbt0nNyFv/2F9zTpMP+ext2xqDNy1z0Pqvj7FSTIzG06XESZv9pMee4SJ3HCptmOA929gObR/L9smkelvw8dyFzlHsv8dQ43kYfeIZC3nIlY/wiyaN9TAH9o/AD/H5phpL8zsS791c5JwB/f0+JAUw==
-  </data>
- </layer>
-</map>

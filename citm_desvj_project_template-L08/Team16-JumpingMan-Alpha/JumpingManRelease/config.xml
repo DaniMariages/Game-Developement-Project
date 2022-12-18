@@ -1,0 +1,40 @@
+<config>
+  <app>
+    <title>Jumping Man</title>
+    <organization>UPC</organization>
+  </app>
+
+  <renderer>
+    <vsync value="true"/>
+  </renderer>
+
+  <window>
+    <resolution width="1024" height="768" scale="1"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+
+  <audio>
+    <music volume="128"/>
+    <fx volume="128"/>
+  </audio>
+
+  <!-- L02: DONE: Add an element for the entity manager and add the player parameters -->
+  <scene>
+    <player x="112" y="672" texturepath="Assets/Textures/PJ3.0.png"/>
+	<enemy x="450" y="530" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="false" range="200"/>
+	<enemy x="300" y="300" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+	<enemy x="700" y="300" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+	<enemy x="864" y="100" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+	<enemy x="1920" y="690" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="false" range="400"/>
+
+  </scene>
+
+  <map>
+    <mapfolder path="Assets/Maps/"/>
+    <mapfile path="Assets/Maps/MapTemplate.tmx"/>
+  </map>
+  
+</config>
