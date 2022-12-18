@@ -59,6 +59,7 @@ bool Scene::Start()
 {
 	intro = app->tex->Load("Assets/Textures/Menu.png");
 	lose = app->tex->Load("Assets/Textures/Lose.png");
+	win = app->tex->Load("Assets/Textures/Win.png");
 	
 	scene = app->scene->INTRO;
 	
@@ -191,7 +192,7 @@ bool Scene::Update(float dt)
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
 
 	case app->scene->WIN:
-		app->render->DrawTexture(lose, posicion - 450, app->render->camera.y);
+		app->render->DrawTexture(win, posicion - 450, app->render->camera.y);
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
 	}
 

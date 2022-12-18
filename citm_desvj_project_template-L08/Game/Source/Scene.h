@@ -56,6 +56,7 @@ public:
 private:
 	SDL_Texture* intro;
 	SDL_Texture* lose;
+	SDL_Texture* win;
 	SDL_Texture* mouseTileTex = nullptr;
 	SDL_Texture* originTex = nullptr;
 
