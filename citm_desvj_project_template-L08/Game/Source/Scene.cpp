@@ -57,8 +57,8 @@ bool Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool Scene::Start()
 {
-	intro = app->tex->Load("Assets/Textures/intro.png");
-	lose = app->tex->Load("Assets/Textures/lose.png");
+	intro = app->tex->Load("Assets/Textures/Menu.png");
+	lose = app->tex->Load("Assets/Textures/Lose.png");
 	
 	scene = app->scene->INTRO;
 	
@@ -136,7 +136,7 @@ bool Scene::Update(float dt)
 	{
 	case app->scene->INTRO:
 
-		app->render->DrawTexture(intro, 300, 100);
+		app->render->DrawTexture(intro, posicion - 450, app->render->camera.y);
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->GAME;
 
@@ -186,8 +186,12 @@ bool Scene::Update(float dt)
 
 	case app->scene->LOSE:
 
-		app->render->DrawTexture(lose, 300, 200);
+		app->render->DrawTexture(lose, posicion - 450, app->render->camera.y);
 
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
+
+	case app->scene->WIN:
+		app->render->DrawTexture(lose, posicion - 450, app->render->camera.y);
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
 	}
 
