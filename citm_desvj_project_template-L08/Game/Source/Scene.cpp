@@ -163,7 +163,8 @@ bool Scene::Update(float dt)
 
 		app->render->DrawTexture(lose, posicion - 450, app->render->camera.y);
 		
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) { 
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) 
+		{ 
 			app->render->camera.y = 0;
 			app->render->camera.x = 0;
 			scene = app->scene->INTRO;
@@ -173,12 +174,10 @@ bool Scene::Update(float dt)
 		break;
 
 	case app->scene->WIN:
-		app->render->DrawTexture(win, posicion - 450, app->render->camera.y);
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-			app->render->camera.y = 0;
-			app->render->camera.x = 0;
-			scene = app->scene->INTRO;
-			break;
+		app->render->DrawTexture(win, 0, 0);
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) 
+		{ 
+			scene = app->scene->INTRO; 
 		}
 	}
 

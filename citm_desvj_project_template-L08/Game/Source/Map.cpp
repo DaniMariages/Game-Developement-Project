@@ -315,16 +315,10 @@ bool Map::Load()
     PhysBody* s3 = app->physics->CreateRectangle(2560 + 208, 704, 96, 32, STATIC);          s3->ctype = ColliderType::SPIKES;
 
     //Vacío
-    PhysBody* a3 = app->physics->CreateRectangle(3296 + 17, 800, 480, 32, STATIC);               a3->ctype = ColliderType::SPIKES;
-
+    PhysBody* a3 = app->physics->CreateRectangle(3296 + 17, 800, 480, 32, STATIC);          a3->ctype = ColliderType::SPIKES;
 
     //Win
-    PhysBody* w1 = app->physics->CreateRectangle(3760, 736, 280, 64, STATIC);               w1->ctype = ColliderType::WIN;
-
-    //Collider de spike para cuando el jugador gana
-    PhysBody* v1 = app->physics->CreateRectangle(3872, 384, 10, 768, STATIC);               v1->ctype = ColliderType::SPIKES;
-
-    
+    PhysBody* w1 = app->physics->CreateRectangle(3960, 500, 280, 768, STATIC);               w1->ctype = ColliderType::WIN;
 
     if(ret == true)
     {

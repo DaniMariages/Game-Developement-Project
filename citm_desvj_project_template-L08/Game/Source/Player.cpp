@@ -344,6 +344,9 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 		if (godmode == false)
 		{
 			win = true;
+			spawn = true;
+			app->scene->scene = app->scene->WIN;
+			app->render->camera.x = 0;
 			currentAnimation = &winAnimation;
 		}
 		break;

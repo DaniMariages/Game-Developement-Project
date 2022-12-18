@@ -8,7 +8,7 @@
 	<pathfinding />
 	<scene />
 	<entitymanager>
-		<player x="253" y="523" />
+		<player x="3614" y="677" />
 		<enemies>
 			<enemy x="0" y="0" />
 			<enemy x="0" y="0" />
@@ -19,6 +19,6 @@
 	</entitymanager>
 	<map />
 	<renderer>
-		<camera x="0" y="0" />
+		<camera x="-2817" y="0" />
 	</renderer>
 </save_state>
