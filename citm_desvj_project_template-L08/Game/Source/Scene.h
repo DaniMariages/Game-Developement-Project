@@ -67,6 +67,8 @@ private:
 	int limiteIzq;
 	int limiteDer;
 
+	bool seePath = false;
+
 };
 
 #endif // __SCENE_H__

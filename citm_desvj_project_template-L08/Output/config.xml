@@ -25,7 +25,10 @@
   <scene>
     <player x="112" y="672" texturepath="Assets/Textures/PJ3.0.png"/>
 	<enemy x="450" y="530" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="false" range="200"/>
-	<enemy x="300" y="700" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+	<enemy x="300" y="300" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+	<enemy x="700" y="300" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+	<enemy x="864" y="100" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="true" range="400"/>
+	<enemy x="1920" y="690" texturepath="Assets/Textures/PJ3.0.png" speed ="2" flying="false" range="400"/>
 
   </scene>
 

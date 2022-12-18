@@ -41,43 +41,6 @@ Enemy::Enemy() : Entity(EntityType::ENEMY)
 	leftAnimation.PushBack({ 345,56,33,25 });
 	leftAnimation.PushBack({ 377,58,32,25 });
 	leftAnimation.speed = 0.12f;
-
-	//Jump animation
-	jumpAnimation.PushBack({ 26, 386, 28, 26 });
-
-	//Jump animation left
-	jumpleftAnimation.PushBack({ 120, 386, 28, 26 });
-
-	//Punch animation
-	punchAnimation.PushBack({ 30,516,26,26 });
-	punchAnimation.PushBack({ 62,516,26,26 });
-	punchAnimation.PushBack({ 94,516,24,26 });
-	punchAnimation.PushBack({ 126,516,20,26 });
-	punchAnimation.speed = 0.05f;
-
-	//Punch left animation
-	punchleftAnimation.PushBack({ 396,572,26,26 });
-	punchleftAnimation.PushBack({ 364,572,26,26 });
-	punchleftAnimation.PushBack({ 334,572,24,26 });
-	punchleftAnimation.PushBack({ 306,572,20,26 });
-	punchleftAnimation.speed = 0.05f;
-
-	//Left Idle animation
-	leftidleAnimation.PushBack({ 183,194,20,26 });
-	leftidleAnimation.PushBack({ 151,192,20,28 });
-	leftidleAnimation.PushBack({ 119,194,20,26 });
-	leftidleAnimation.PushBack({ 87,194,20,26 });
-	leftidleAnimation.PushBack({ 345,56,33,25 });
-	leftidleAnimation.speed = 0.03f;
-
-	//Win animation
-	winAnimation.PushBack({ 124, 34, 26, 29 });
-	winAnimation.PushBack({ 156, 34, 26, 29 });
-	winAnimation.PushBack({ 124, 34, 26, 29 });
-	winAnimation.PushBack({ 156, 34, 26, 29 });
-	winAnimation.PushBack({ 124, 34, 26, 29 });
-	winAnimation.PushBack({ 156, 34, 26, 29 });
-	winAnimation.speed = 0.2f;
 }
 
 Enemy::~Enemy() {
@@ -143,20 +106,17 @@ bool Enemy::Update()
 		SDL_Rect rect = currentAnimation->GetCurrentFrame();
 		app->render->DrawTexture(texture, position.x, position.y, &rect);
 
-		app->pathfinding->CreatePath(enemyPos, playerPos, flying);
-
-		const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
 		switch (state)
 		{
 		case IDLE:
 
-			if (flying) pbody->body->SetLinearVelocity(b2Vec2(0, 0));
-			else
+			if (flying)
 			{
-				pbody->body->SetLinearVelocity(b2Vec2(directionX * speed, 0));
-				if (app->pathfinding->IsWalkable(iPoint(enemyPos.x + directionX, enemyPos.y), flying))(directionX *= -1); ;
+				pbody->body->SetLinearVelocity(b2Vec2(3, 0));
+				currentAnimation = &rightAnimation;
 			}
-
+			else pbody->body->SetLinearVelocity(b2Vec2(directionX * speed, 0));
+			
 			//Calcular la distancia al jugador, si esta cerca cambia a CHASE
 			if (position.DistanceTo(app->scene->player->position) < range) state = Enemy::CHASE;
 
@@ -164,8 +124,10 @@ bool Enemy::Update()
 
 		case CHASE:
 
-			//Si el jugador se acerca deja de seguirlo y cambia a IDLE
+			//Si el jugador se aleja deja de seguirlo y cambia a IDLE
 			if (position.DistanceTo(app->scene->player->position) > range) state = Enemy::IDLE;
+
+			app->pathfinding->CreatePath(enemyPos, playerPos, flying);
 
 			if (flying)
 			{
@@ -179,23 +141,25 @@ bool Enemy::Update()
 					if (pos.x > position.x)
 					{
 						directionX = 1;
+						currentAnimation = &rightAnimation;
 					}
 					if (pos.x < position.x)
 					{
 						directionX = -1;
+						currentAnimation = &leftAnimation;
 					}
 
 					if (pos.y > position.y)
 					{
-						directionY = -1;
+						directionY = 1;
 					}
 					if (pos.y < position.y)
 					{
-						directionY = 1;
+						directionY = -1;
 					}
 				}
 
-				pbody->body->SetLinearVelocity(b2Vec2(directionX * 2 * speed, -directionY * 2 * speed));
+				pbody->body->SetLinearVelocity(b2Vec2(directionX * 2 * speed, directionY * 2 * speed));
 			}
 
 			else
@@ -232,10 +196,8 @@ bool Enemy::Update()
 		case DEAD:
 			break;
 		}
-
-
 	}
-
+	//app->pathfinding->ClearLastPath();
 	return true;
 }
 
@@ -248,11 +210,6 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 {
 	switch (physB->ctype)
 	{
-	case ColliderType::ITEM:
-
-		LOG("Collision ITEM");
-		break;
-
 	case ColliderType::PLATFORM:
 
 		LOG("Collision PLATFORM");
@@ -275,30 +232,25 @@ void Enemy::OnCollision(PhysBody* physA, PhysBody* physB)
 
 		break;
 
-	case ColliderType::ATTACK:
-
-		LOG("Collision ATTACK");
-
-		break;
-
 	case ColliderType::SPIKES:
 
 		LOG("Collision SPIKES");
 		break;
 
-	case ColliderType::UNKNOWN:
-
-		LOG("Collision UNKNOWN");
-		break;
-
-	case ColliderType::WIN:
-
-		LOG("Collision WIN");
-		break;
-
 	case ColliderType::ENEMY:
 
-		LOG("Collision SPIKES");
+		LOG("Collision ENEMY");
+
+		if (directionX == 1)
+		{
+			directionX = -1;
+			currentAnimation = &leftAnimation;
+		}
+		else
+		{
+			directionX = 1;
+			currentAnimation = &rightAnimation;
+		}
 		break;
 
 	case ColliderType::PLAYER:

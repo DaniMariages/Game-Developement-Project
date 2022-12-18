@@ -5,6 +5,7 @@
 #include "Textures.h"
 #include "Scene.h"
 #include "Physics.h"
+#include "Enemy.h"
 
 #include "Defs.h"
 #include "Log.h"
@@ -144,7 +145,21 @@ bool EntityManager::LoadState(pugi::xml_node& data)
 	float x = data.child("player").attribute("x").as_int();
 	float y = data.child("player").attribute("y").as_int();
 
-	app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(x), PIXEL_TO_METERS(y) }, 0);
+	app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(x),PIXEL_TO_METERS(y) }, 0);
+
+	ListItem<Entity*>* item;
+	Entity* pEntity = NULL;
+
+	for (item = entities.start; item != NULL; item = item->next)
+	{
+		pEntity = item->data;
+		if (pEntity->type == EntityType::ENEMY)
+		{
+			pEntity->position.x = data.child("enemy").attribute("x").as_int();
+			pEntity->position.y = data.child("enemy").attribute("y").as_int();
+		}
+		if (pEntity->active == false) continue;
+	}
 
 	return true;
 }
@@ -152,10 +167,26 @@ bool EntityManager::LoadState(pugi::xml_node& data)
 bool EntityManager::SaveState(pugi::xml_node& data)
 {
 	pugi::xml_node player = data.append_child("player");
+	pugi::xml_node enemies = data.append_child("enemies");
 
 	player.append_attribute("x") = app->scene->player->position.x;
 	player.append_attribute("y") = app->scene->player->position.y;
 
+	ListItem<Entity*>* item;
+	Entity* pEntity = NULL;
+
+	for (item = entities.start; item != NULL; item = item->next)
+	{
+		pEntity = item->data;
+		if (pEntity->type == EntityType::ENEMY)
+		{
+			pugi::xml_node enemy = enemies.append_child("enemy");
+			enemy.append_attribute("x") = pEntity->position.x;
+			enemy.append_attribute("y") = pEntity->position.y;
+
+		}
+		if (pEntity->active == false) continue;
+	}
 	return true;
 }
 

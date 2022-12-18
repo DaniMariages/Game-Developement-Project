@@ -357,8 +357,6 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			spawn = true;
 		}
 
-		
-		
 		break;
 	}
 }

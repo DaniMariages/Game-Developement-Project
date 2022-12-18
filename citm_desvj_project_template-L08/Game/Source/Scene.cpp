@@ -137,7 +137,7 @@ bool Scene::Update(float dt)
 	{
 	case app->scene->INTRO:
 
-		app->render->DrawTexture(intro, posicion - 450, app->render->camera.y);
+		app->render->DrawTexture(intro, app->render->camera.x, app->render->camera.y);
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->GAME;
 
@@ -157,94 +157,33 @@ bool Scene::Update(float dt)
 		// Draw map
 		app->map->Draw();
 
-		//// L08: DONE 3: Test World to map method
-		//int mouseX, mouseY;
-		//app->input->GetMousePosition(mouseX, mouseY);
-
-		//iPoint mouseTile = iPoint(0, 0);
-
-		//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-		//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
-		//		mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
-		//}
-		//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-		//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
-		//		mouseY - app->render->camera.y);
-		//}
-
-		////Convert again the tile coordinates to world coordinates to render the texture of the tile
-		//iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
-		//app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
-
-		//const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-		//for (uint i = 0; i < path->Count(); ++i)
-		//{
-		//	iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-		//	app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
-		//}
-
 		break;
 
 	case app->scene->LOSE:
 
-		app->render->DrawTexture(lose, posicion - 450, app->render->camera.y);
-
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
+		app->render->DrawTexture(lose, posicion, app->render->camera.y);
 
 	case app->scene->WIN:
-		app->render->DrawTexture(win, posicion - 450, app->render->camera.y);
+		app->render->DrawTexture(win, posicion, app->render->camera.y);
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
 	}
 
-	//// Draw map
-	//app->map->Draw();
+	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) 
+	{
+		if (seePath == false) seePath = true;
+		else seePath = false;
+	}
 
-	//// L08: DONE 3: Test World to map method
-	//int mouseX, mouseY;
-	//app->input->GetMousePosition(mouseX, mouseY);
-
-	//iPoint mouseTile = iPoint(0, 0);
-
-	//if (app->map->mapData.type == MapTypes::MAPTYPE_ISOMETRIC) {
-	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x - app->map->mapData.tileWidth / 2,
-	//		mouseY - app->render->camera.y - app->map->mapData.tileHeight / 2);
-	//}
-	//if (app->map->mapData.type == MapTypes::MAPTYPE_ORTHOGONAL) {
-	//	mouseTile = app->map->WorldToMap(mouseX - app->render->camera.x,
-	//		mouseY - app->render->camera.y);
-	//}
-
-	////Convert again the tile coordinates to world coordinates to render the texture of the tile
-	//iPoint highlightedTileWorld = app->map->MapToWorld(mouseTile.x, mouseTile.y);
-	//app->render->DrawTexture(mouseTileTex, highlightedTileWorld.x, highlightedTileWorld.y);
-
-	////Test compute path function
-	//if (app->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
-	//{
-	//	if (originSelected == true)
-	//	{
-	//		app->pathfinding->CreatePath(origin, mouseTile, false);
-	//		originSelected = false;
-	//	}
-	//	else
-	//	{
-	//		origin = mouseTile;
-	//		originSelected = true;
-	//		app->pathfinding->ClearLastPath();
-	//	}
-	//}
-
-	// L12: Get the latest calculated path and draw
-	//const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
-	//for (uint i = 0; i < path->Count(); ++i)
-	//{
-	//	iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
-	//	app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
-	//}
-
-	//// L12: Debug pathfinding
-	//iPoint originScreen = app->map->MapToWorld(origin.x, origin.y);
-	//app->render->DrawTexture(originTex, originScreen.x, originScreen.y);
+	if (seePath == true)
+	{
+		// L12: Get the latest calculated path and draw
+		const DynArray<iPoint>* path = app->pathfinding->GetLastPath();
+		for (uint i = 0; i < path->Count(); ++i)
+		{
+			iPoint pos = app->map->MapToWorld(path->At(i)->x, path->At(i)->y);
+			app->render->DrawTexture(mouseTileTex, pos.x, pos.y);
+		}
+	}
 
 	return true;
 }
