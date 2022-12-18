@@ -137,7 +137,7 @@ bool Scene::Update(float dt)
 	{
 	case app->scene->INTRO:
 
-		app->render->DrawTexture(intro, app->render->camera.x, app->render->camera.y);
+		app->render->DrawTexture(intro, 0,0);
 
 		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->GAME;
 
@@ -161,11 +161,21 @@ bool Scene::Update(float dt)
 
 	case app->scene->LOSE:
 
-		app->render->DrawTexture(lose, posicion, app->render->camera.y);
+		app->render->DrawTexture(lose, posicion - 450, app->render->camera.y);
+		
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) { 
+			app->render->camera.y = 0;
+			app->render->camera.x = 0;
+			scene = app->scene->INTRO;
+			break;
+		}
+
+		break;
 
 	case app->scene->WIN:
 		app->render->DrawTexture(win, posicion, app->render->camera.y);
-		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) scene = app->scene->INTRO;
+		if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) { 
+			scene = app->scene->INTRO; }
 	}
 
 	if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) 
