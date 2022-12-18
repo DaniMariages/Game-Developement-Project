@@ -9,6 +9,7 @@ Juego de plataformas inspirado en super mario.
  - F1: Ver Colliders
  - F5: Guardar
  - F6: Cargar
+ - F7: Ver Pathfinding
  - F10: God mode
  - UP: Mover camara hacia arriba
  - DOWN: Mover camara hacia abajo
